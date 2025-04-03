@@ -1,0 +1,20 @@
+# Dependencies
+node_modules
+
+# Build outputs
+.output
+/.svelte-kit
+/build
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.*
+!.env.example
+!.env.test
+
+# Vite temporary files
+vite.config.*.timestamp-*
