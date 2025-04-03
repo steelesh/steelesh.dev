@@ -6,7 +6,7 @@
   <div class="container">
     <div class="content">
       <p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2025 &copy; Steele Shreve</p>
-      <p>v{version}</p>
+      <p><a href="https://github.com/steelesh/steelesh.dev/releases/tag/v{version}">v{version}</a></p>
     </div>
   </div>
 </footer>
