@@ -5,7 +5,7 @@
 <footer>
   <div class="container">
     <div class="content">
-      <p>2025 &copy; Steele Shreve</p>
+      <p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2025 &copy; Steele Shreve</p>
       <p>v{version}</p>
     </div>
   </div>
@@ -25,5 +25,15 @@
     color: var(--fg-muted);
     font-size: var(--fs-xs);
     margin-bottom: 0;
+  }
+  a {
+    text-decoration: none;
+    color: var(--fg);
+    border-bottom: 1px solid var(--bg-muted);
+    font-weight: 500;
+    transition: border-color 0.2s ease-in-out;
+  }
+  a:hover {
+    border-bottom: 1px solid var(--fg-muted);
   }
 </style>
