@@ -20,7 +20,7 @@
   <div class="container">
     <ul>
       <li class={isActive("/") ? "active" : ""}><a href="/">Home</a></li>
-      <li class={isActive("/p") ? "active" : ""}><a href="/p">More</a></li>
+      <!-- <li class={isActive("/p") ? "active" : ""}><a href="/p">More</a></li> -->
     </ul>
   </div>
 </nav>
