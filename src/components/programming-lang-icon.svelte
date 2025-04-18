@@ -86,10 +86,5 @@
   a {
     text-decoration: none;
     color: inherit;
-
-  }
-
-  a span {
-    user-select: none;
   }
 </style>
