@@ -129,8 +129,3 @@ pre {
   padding: var(--spacing-sm);
   overflow-x: auto;
 }
-
-::selection {
-  background-color: transparent;
-  color: var(--accent);
-}
