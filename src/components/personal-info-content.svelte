@@ -6,7 +6,7 @@
 
 <div>
   <h1>Steele S.</h1>
-  <p class={`${minimal ? "minimal" : ""}`}>Software Engineer</p>
+  <p class={`${minimal ? "minimal" : ""}`}> Software Developer - Intern @ Manifest </p>
   <SocialIcons {minimal} />
 </div>
 
