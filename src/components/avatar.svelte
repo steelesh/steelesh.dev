@@ -1,5 +1,5 @@
 <enhanced:img
-  src="$lib/assets/avatar.jpg"
+  src="$lib/assets/avatar_zoomed.jpg"
   alt="My avatar"
   class="avatar"
 />
