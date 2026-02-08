@@ -32,7 +32,7 @@
       Go: isDarkMode ? "#FFFFFF" : "#00ADD8",
       Python: isDarkMode ? "#FFD43B" : "#3776AB",
       Svelte: isDarkMode ? "#FF3E00" : "#FF3E00",
-      Java: isDarkMode ? "#EA2D2E" : "#007396",
+      Java: isDarkMode ? "#FFF" : "#FFF",
       CSharp: isDarkMode ? "#FFFFFF" : "#9B4F96",
       TypeScript: isDarkMode ? "#007ACC" : "#007ACC",
     };
