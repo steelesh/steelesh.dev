@@ -1,32 +1,44 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import Footer from "$components/footer.svelte";
-  import Header from "$components/header.svelte";
   import "$styles/reset.css";
   import "$styles/global.css";
   import "$styles/fonts.css";
-  import Nav from "$components/nav.svelte";
+  import Footer from "$components/footer.svelte";
+  import ScrollIndicator from "$components/scroll-indicator.svelte";
+  import { smoothScroll } from "$lib/actions/smooth-scroll";
 
   const { children } = $props();
-
-  const showFullHeader = $derived(!page.url.pathname.startsWith("/p/"));
 </script>
 
-{#if showFullHeader}
-  <Header />
-  <Nav />
-{:else}
-  <Header minimal />
-{/if}
-<main>
-  <div class="container">
+<a href="#experience" class="skip-link">Skip to content</a>
+<ScrollIndicator />
+<div use:smoothScroll>
+  <main>
     {@render children()}
-  </div>
-</main>
-<Footer />
+  </main>
+  <Footer />
+</div>
 
 <style>
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--fg);
+    color: var(--bg);
+    font-family: var(--font-sans);
+    font-size: var(--fs-small);
+    text-decoration: none;
+    z-index: 100;
+    border-radius: 2px;
+  }
+
+  .skip-link:focus {
+    top: var(--space-sm);
+  }
+
   main {
     flex: 1;
+    background: var(--footer-bg);
   }
 </style>

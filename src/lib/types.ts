@@ -1,16 +1,18 @@
-export type Categories = "sveltekit" | "svelte";
-
-export type Post = {
+export type Experience = {
   title: string;
-  slug: string;
+  company: string;
+  companyUrl: string;
+  location: string;
+  period: string;
   description: string;
-  date: string;
-  categories: Categories[];
-  draft: boolean;
+  type: "work" | "education";
+  tags?: string[];
 };
 
-export type ProgrammingLangIcon = {
+export type Project = {
   name: string;
-  svg: string;
-  link: string;
+  description: string;
+  tags: string[];
+  url?: string;
+  sourceUrl?: string;
 };

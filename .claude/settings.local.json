@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ESLINT_USE_FLAT_CONFIG=true npx eslint:*)",
+      "Bash(bunx eslint:*)"
+    ]
+  }
+}

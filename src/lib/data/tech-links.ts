@@ -1,0 +1,18 @@
+export const techLinks: Record<string, string> = {
+  "Next.js": "https://nextjs.org",
+  "MySQL": "https://www.mysql.com",
+  "Redis": "https://redis.io",
+  "Azure": "https://azure.microsoft.com",
+  "Go": "https://go.dev",
+  "Ollama": "https://ollama.ai",
+  "SvelteKit": "https://svelte.dev",
+  "TypeScript": "https://www.typescriptlang.org",
+  "CSS": "https://developer.mozilla.org/en-US/docs/Web/CSS",
+  "Spring Boot": "https://spring.io/projects/spring-boot",
+  "AWS": "https://aws.amazon.com",
+  "React": "https://react.dev",
+  "C#": "https://learn.microsoft.com/en-us/dotnet/csharp/",
+  ".NET": "https://dotnet.microsoft.com",
+  "WordPress": "https://wordpress.org",
+  "Adobe Creative Cloud": "https://www.adobe.com/creativecloud.html",
+};

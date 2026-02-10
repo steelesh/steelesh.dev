@@ -3,37 +3,42 @@
 </script>
 
 <footer>
-  <div class="container">
-    <div class="content">
-      <p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 2025 &copy; Steele Shreve</p>
-      <p><a href="https://github.com/steelesh/steelesh.dev/releases/tag/v{version}">v{version}</a></p>
-    </div>
+  <div class="footer__inner">
+    <p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a> 2025 &copy; Steele Shreve</p>
+    <p><a href="https://github.com/steelesh/steelesh.dev/releases/tag/v{version}">v{version}</a></p>
   </div>
 </footer>
 
 <style>
   footer {
-    padding: 0.75rem 0;
-    border-top: 1px solid var(--bg-muted);
+    padding: var(--space-lg) var(--space-md);
+    padding-top: calc(var(--space-lg) + 1.5rem);
+    margin-top: -1.5rem;
+    background: var(--footer-bg);
   }
-  .content {
+
+  .footer__inner {
+    max-width: var(--max-width);
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
+
   p {
-    color: var(--fg-muted);
+    color: rgba(255, 255, 255, 0.35);
+    font-family: var(--font-sans);
     font-size: var(--fs-xs);
     margin-bottom: 0;
   }
+
   a {
     text-decoration: none;
-    color: var(--fg);
-    border-bottom: 1px solid var(--bg-muted);
-    font-weight: 500;
-    transition: border-color 0.2s ease-in-out;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color var(--duration-fast) var(--ease-out);
   }
+
   a:hover {
-    border-bottom: 1px solid var(--fg-muted);
+    color: rgba(255, 255, 255, 0.8);
   }
 </style>

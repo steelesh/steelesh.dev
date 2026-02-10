@@ -1,80 +1,83 @@
 :root {
-  --bg: #fff;
-  --bg-muted: #e5e5e5;
-  --bg-badge: #f5f5f5;
-  --fg: #1a1a1a;
-  --fg-muted: #585858;
-  --accent: #ff3a45;
-  --border-color: rgba(0, 0, 0, 0.1);
+  --bg: #faf8f5;
+  --bg-subtle: #f0ede8;
+  --bg-muted: #e8e4de;
+  --fg: #333334;
+  --fg-muted: #6b6560;
+  --fg-subtle: #9b9590;
+  --border-color: rgba(51, 51, 52, 0.12);
 
-  --font-default: "Anuphan", -apple-system, sans-serif;
-  --font-mono: monospace;
+  --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "SF Mono", "Fira Code", monospace;
 
-  --lh-body: 1.6;
-  --lh-heading: 1.2;
+  --tracking-tight: -0.03em;
+  --tracking-wide: 0.02em;
+  --leading-tight: 1.08;
+  --leading-snug: 1.25;
+  --leading-body: 1.6;
 
-  --fs-base: 0.9rem;
-  --fs-xs: 0.575rem;
-  --fs-sm: 0.675rem;
-  --fs-md: 0.8rem;
-  --fs-lg: 1rem;
-  --fs-xl: 1.25rem;
-  --fs-2xl: 2rem;
+  --fs-hero: clamp(3rem, 8vw, 6rem);
+  --fs-display: clamp(2rem, 5vw, 3.5rem);
+  --fs-h1: clamp(1.75rem, 3vw, 2.5rem);
+  --fs-h2: clamp(1.25rem, 2.5vw, 1.75rem);
+  --fs-body: clamp(0.9375rem, 1.2vw, 1.0625rem);
+  --fs-small: clamp(0.8125rem, 1vw, 0.875rem);
+  --fs-xs: 0.75rem;
 
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2.5rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-section: clamp(4rem, 10vh, 8rem);
 
-  view-transition-name: none;
+  --max-width: 1100px;
+  --max-width-text: 680px;
+
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --duration-fast: 200ms;
+  --duration-base: 400ms;
+  --duration-slow: 800ms;
+
+  --dark-bg: #0a0a09;
+  --dark-fg: #f0ede8;
+  --accent: #c4956a;
+  --current: #10b981;
+  --footer-bg: #122a1e;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1a1a;
-    --bg-muted: #2a2d33;
-    --bg-badge: #222222;
-    --fg: #fff;
-    --fg-muted: #c0c0c0;
-    --border-color: rgba(255, 255, 255, 0.1);
+    --bg: #1a1917;
+    --bg-subtle: #242320;
+    --bg-muted: #2e2d2a;
+    --fg: #f0ede8;
+    --fg-muted: #a8a29e;
+    --fg-subtle: #78716c;
+    --border-color: rgba(240, 237, 232, 0.1);
   }
 }
 
-@media screen and (max-width: 768px) {
-  :root {
-    --fs-base: 1rem;
-    --fs-md: 0.9rem;
-    --fs-lg: 1.1rem;
-    --fs-xl: 1.5rem;
-    --fs-2xl: 2rem;
+html {
+  scrollbar-width: none;
+}
 
-    --spacing-lg: 1.75rem;
-    --spacing-xl: 2.5rem;
-  }
+html::-webkit-scrollbar {
+  display: none;
 }
 
 body {
   background-color: var(--bg);
   color: var(--fg);
-  font-family: var(--font-default);
-  font-size: var(--fs-base);
-  font-weight: 500;
-  line-height: var(--lh-body);
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: var(--leading-body);
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-}
-
-.container {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 0 1rem;
-  width: 100%;
-}
-
-p {
-  margin-bottom: var(--spacing-lg);
 }
 
 h1,
@@ -83,49 +86,35 @@ h3,
 h4,
 h5,
 h6 {
+  font-family: var(--font-serif);
   color: var(--fg);
-  line-height: var(--lh-heading);
+  line-height: var(--leading-snug);
+  letter-spacing: var(--tracking-tight);
 }
 
-h1 {
-  font-size: var(--fs-2xl);
-  margin-bottom: var(--spacing-xl);
+a {
+  color: var(--fg);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.15em;
+  transition: color var(--duration-fast) var(--ease-out);
 }
 
-h2 {
-  font-size: var(--fs-xl);
-  margin-bottom: var(--spacing-lg);
+::selection {
+  background-color: var(--fg);
+  color: var(--bg);
 }
 
-h3 {
-  font-size: var(--fs-lg);
-  margin-bottom: var(--spacing-md);
-}
-
-h4 {
-  font-size: var(--fs-md);
-  margin-bottom: var(--spacing-sm);
-}
-
-h5 {
-  font-size: var(--fs-base);
-  margin-bottom: var(--spacing-sm);
-}
-
-h6 {
-  font-size: var(--fs-sm);
-  margin-bottom: var(--spacing-sm);
-}
-
-code,
-pre,
-.mono {
+.section-index {
+  display: block;
   font-family: var(--font-mono);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
+  color: var(--fg-subtle);
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-sm);
 }
 
-pre {
-  margin-bottom: var(--spacing-md);
-  padding: var(--spacing-sm);
-  overflow-x: auto;
+@media (min-width: 769px) {
+  .section-index {
+    margin-left: -2rem;
+  }
 }
