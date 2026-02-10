@@ -2,7 +2,12 @@
   "permissions": {
     "allow": [
       "Bash(ESLINT_USE_FLAT_CONFIG=true npx eslint:*)",
-      "Bash(bunx eslint:*)"
+      "Bash(bunx eslint:*)",
+      "Bash(gh run list:*)",
+      "Bash(git -C /Users/steele/Development/steelesh.dev diff --name-only HEAD -- pnpm-lock.yaml)",
+      "Bash(git -C /Users/steele/Development/steelesh.dev status pnpm-lock.yaml)",
+      "Bash(git -C /Users/steele/Development/steelesh.dev log --oneline -10)",
+      "Bash(git -C /Users/steele/Development/steelesh.dev diff --stat HEAD)"
     ]
   }
 }
