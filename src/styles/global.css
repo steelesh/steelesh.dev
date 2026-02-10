@@ -8,8 +8,8 @@
   --border-color: rgba(51, 51, 52, 0.12);
 
   --font-serif: "Instrument Serif", Georgia, "Times New Roman", serif;
-  --font-sans: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-  --font-mono: "SF Mono", "Fira Code", monospace;
+  --font-sans: "Anuphan", -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "Berkeley Mono", "SF Mono", "Fira Code", monospace;
 
   --tracking-tight: -0.03em;
   --tracking-wide: 0.02em;

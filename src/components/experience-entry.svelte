@@ -12,18 +12,35 @@
   const { experience }: Props = $props();
 
   const isCurrent = $derived(experience.period.includes("Present"));
+
+  function activateEntry(node: EventTarget | null) {
+    (node as HTMLElement)?.closest("[data-entry]")?.dispatchEvent(
+      new CustomEvent("entryactivate", { bubbles: true }),
+    );
+  }
 </script>
 
 <div class="entry" data-entry>
   <div class="entry__date">
-    <span class="entry__period">{experience.period}</span>
+    <span class="entry__period">{#if isCurrent}{experience.period.replace(" Present", "")} <strong class="entry__present">Present</strong>{:else}{experience.period}{/if}</span>
   </div>
   <div class="entry__line">
     <span class="entry__dot" class:entry__dot--current={isCurrent}></span>
   </div>
   <div class="entry__content">
-    <span class="entry__period-mobile">{experience.period}</span>
-    <h3 class="entry__title">{experience.title}</h3>
+    <span class="entry__period-mobile">{#if isCurrent}{experience.period.replace(" Present", "")} <strong class="entry__present">Present</strong>{:else}{experience.period}{/if}</span>
+    <h3
+      class="entry__title"
+      role="button"
+      tabindex="0"
+      onclick={e => activateEntry(e.currentTarget)}
+      onkeydown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activateEntry(e.currentTarget);
+        }
+      }}
+    >{experience.title}</h3>
     <p class="entry__company">
       <a class="entry__company-link" href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
         {experience.company}
@@ -69,7 +86,7 @@
   }
 
   .entry__period {
-    font-family: var(--font-sans);
+    font-family: var(--font-mono);
     font-size: var(--fs-small);
     color: var(--fg-subtle);
     letter-spacing: var(--tracking-wide);
@@ -88,6 +105,8 @@
     bottom: 0;
     width: 1px;
     background: var(--border-color);
+    opacity: calc(0.4 + var(--passed, 0) * 0.6);
+    transition: opacity 400ms var(--ease-out);
   }
 
   .entry:last-child .entry__line::before {
@@ -105,7 +124,10 @@
     z-index: 1;
     flex-shrink: 0;
     opacity: calc(0.25 + var(--focus, 1) * 0.75);
-    transition: opacity 150ms ease-out;
+    transform: scale(calc(1 + var(--passed, 0) * 0.25));
+    transition:
+      opacity 150ms ease-out,
+      transform 400ms var(--ease-out);
   }
 
   .entry__dot--current {
@@ -137,6 +159,10 @@
     padding-bottom: 0;
   }
 
+  .entry__present {
+    font-weight: 600;
+  }
+
   .entry__period-mobile {
     display: none;
   }
@@ -145,6 +171,12 @@
     font-size: var(--fs-h1);
     line-height: var(--leading-snug);
     margin-bottom: 0.25rem;
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .entry__title:hover {
+    color: var(--fg-muted);
   }
 
   .entry__company {
@@ -202,7 +234,6 @@
     --tag-s: 0%;
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
     font-family: var(--font-sans);
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
@@ -228,17 +259,20 @@
   }
 
   .entry__tag :global(svg) {
+    width: 0;
     opacity: 0;
-    transform: translateX(-2px);
-    transition:
-      opacity 200ms ease,
-      transform 200ms ease;
+    overflow: hidden;
     flex-shrink: 0;
+    transition:
+      width 200ms ease,
+      margin-left 200ms ease,
+      opacity 200ms ease;
   }
 
   a.entry__tag:hover :global(svg) {
+    width: 10px;
+    margin-left: 0.3rem;
     opacity: 1;
-    transform: translateX(0);
   }
 
   @media (max-width: 640px) {

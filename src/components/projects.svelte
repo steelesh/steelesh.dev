@@ -1,5 +1,6 @@
 <script lang="ts">
   import ProjectCard from "$components/project-card.svelte";
+  import { roughHighlight } from "$lib/actions/rough-highlight";
   import { scrollReveal } from "$lib/actions/scroll-reveal";
   import { projects } from "$lib/data/projects";
 </script>
@@ -8,7 +9,7 @@
   <div class="projects__inner">
     <span class="section-index projects__index" use:scrollReveal={{ y: 15 }}>[3]</span>
     <h2 class="projects__heading" id="projects-heading" use:scrollReveal={{ y: 20 }}>
-      Side projects
+      <span use:roughHighlight>Side projects</span>
     </h2>
     <div class="projects__list">
       {#each projects as project, i}

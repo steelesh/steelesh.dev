@@ -54,7 +54,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 1rem;
-    font-family: var(--font-sans);
+    font-family: -apple-system, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     font-size: clamp(2.25rem, 5vw, 3.75rem);
     font-weight: 500;
     line-height: 1.1;
@@ -144,19 +144,49 @@
     font-weight: 400;
     color: rgba(255, 255, 255, 0.9);
     letter-spacing: 0.05em;
-    background: linear-gradient(
-      135deg,
-      rgba(0, 0, 0, 0.3) 0%,
-      rgba(0, 0, 0, 0.45) 100%
-    );
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.5),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
     padding: 0.45em 1.1em;
     border-radius: 100px;
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .hero__sub-text::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 300%;
+    aspect-ratio: 1;
+    background: conic-gradient(
+      from 180deg,
+      transparent 0deg,
+      color-mix(in srgb, var(--accent) 15%, transparent) 60deg,
+      color-mix(in srgb, var(--accent) 35%, transparent) 90deg,
+      color-mix(in srgb, var(--accent) 15%, transparent) 120deg,
+      transparent 180deg
+    );
+    animation: shimmer-border 6s linear infinite;
+    z-index: -2;
+  }
+
+  .hero__sub-text::after {
+    content: "";
+    position: absolute;
+    inset: 1px;
+    border-radius: 100px;
+    background: rgba(0, 0, 0, 0.85);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    z-index: -1;
+  }
+
+  @keyframes shimmer-border {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
   }
 
   .hero__scroll {

@@ -71,7 +71,6 @@
     --tag-s: 0%;
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
     font-family: var(--font-sans);
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
@@ -97,16 +96,19 @@
   }
 
   .card__tag :global(svg) {
+    width: 0;
     opacity: 0;
-    transform: translateX(-2px);
-    transition:
-      opacity 200ms ease,
-      transform 200ms ease;
+    overflow: hidden;
     flex-shrink: 0;
+    transition:
+      width 200ms ease,
+      margin-left 200ms ease,
+      opacity 200ms ease;
   }
 
   a.card__tag:hover :global(svg) {
+    width: 10px;
+    margin-left: 0.3rem;
     opacity: 1;
-    transform: translateX(0);
   }
 </style>

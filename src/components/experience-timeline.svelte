@@ -1,5 +1,6 @@
 <script lang="ts">
   import ExperienceEntry from "$components/experience-entry.svelte";
+  import { roughHighlight } from "$lib/actions/rough-highlight";
   import { scrollReveal } from "$lib/actions/scroll-reveal";
   import { experiences } from "$lib/data/experience";
   import { onMount } from "svelte";
@@ -25,6 +26,7 @@
       if (cycleComplete || reduced) {
         for (const entry of entryList) {
           entry.style.setProperty("--focus", "1");
+          entry.style.setProperty("--passed", "1");
         }
         ticking = false;
         return;
@@ -35,6 +37,7 @@
         cycleComplete = true;
         for (const entry of entryList) {
           entry.style.setProperty("--focus", "1");
+          entry.style.setProperty("--passed", "1");
         }
         ticking = false;
         return;
@@ -60,7 +63,9 @@
 
       for (let i = 0; i < entryList.length; i++) {
         const focus = i === closestIdx ? 1 : 0;
+        const passed = i <= closestIdx ? 1 : 0;
         entryList[i].style.setProperty("--focus", String(focus));
+        entryList[i].style.setProperty("--passed", String(passed));
       }
 
       ticking = false;
@@ -116,11 +121,46 @@
       }
     }
 
+    function onEntryActivate(e: Event) {
+      const clickedEntry = (e.target as HTMLElement).closest("[data-entry]") as HTMLElement;
+      if (!clickedEntry)
+        return;
+
+      cycleComplete = false;
+      lastSeen = false;
+
+      const entries = entriesEl.querySelectorAll<HTMLElement>("[data-entry]");
+      const entryList = Array.from(entries);
+      const clickedIdx = entryList.indexOf(clickedEntry);
+
+      for (let i = 0; i < entryList.length; i++) {
+        const focus = i === clickedIdx ? 1 : 0;
+        const passed = i <= clickedIdx ? 1 : 0;
+        entryList[i].style.setProperty("--focus", String(focus));
+        entryList[i].style.setProperty("--passed", String(passed));
+      }
+
+      const rect = clickedEntry.getBoundingClientRect();
+      const entryCenter = rect.top + rect.height / 2;
+      const viewCenter = window.innerHeight / 2;
+      const offset = entryCenter - viewCenter;
+
+      if (Math.abs(offset) > 20) {
+        isSnapping = true;
+        window.scrollBy({ top: offset, behavior: "smooth" });
+        setTimeout(() => {
+          isSnapping = false;
+        }, 600);
+      }
+    }
+
     window.addEventListener("scroll", onScroll, { passive: true });
+    entriesEl.addEventListener("entryactivate", onEntryActivate);
     update();
 
     return () => {
       window.removeEventListener("scroll", onScroll);
+      entriesEl.removeEventListener("entryactivate", onEntryActivate);
       clearTimeout(snapTimer);
     };
   });
@@ -130,7 +170,7 @@
   <div class="timeline__inner">
     <span class="section-index" use:scrollReveal={{ y: 15 }}>[2]</span>
     <h2 class="timeline__heading" id="experience-heading" use:scrollReveal={{ y: 20 }}>
-      Experience
+      <span use:roughHighlight>Experience</span>
     </h2>
     <div class="timeline__entries" bind:this={entriesEl}>
       {#each experiences as experience}
@@ -144,6 +184,19 @@
   .timeline {
     padding: var(--space-section) var(--space-md);
     background: var(--bg);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timeline::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-repeat: repeat;
+    background-size: 128px;
+    opacity: 0.7;
+    pointer-events: none;
   }
 
   .timeline__inner {
@@ -156,5 +209,17 @@
     letter-spacing: var(--tracking-tight);
     line-height: var(--leading-tight);
     margin-bottom: var(--space-xl);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .timeline {
+      --bg: #faf8f5;
+      --bg-subtle: #f0ede8;
+      --bg-muted: #e8e4de;
+      --fg: #333334;
+      --fg-muted: #6b6560;
+      --fg-subtle: #9b9590;
+      --border-color: rgba(51, 51, 52, 0.12);
+    }
   }
 </style>
