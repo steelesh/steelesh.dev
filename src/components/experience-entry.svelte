@@ -2,6 +2,7 @@
   import type { Experience } from "$lib/types";
 
   import { ExternalLink } from "@lucide/svelte";
+  import { tagColors } from "$lib/data/tag-colors";
   import { techLinks } from "$lib/data/tech-links";
 
   type Props = {
@@ -21,8 +22,9 @@
     <span class="entry__dot" class:entry__dot--current={isCurrent}></span>
   </div>
   <div class="entry__content">
+    <span class="entry__period-mobile">{experience.period}</span>
     <h3 class="entry__title">{experience.title}</h3>
-    <p class="entry__company" data-period="{experience.period} · ">
+    <p class="entry__company">
       <a class="entry__company-link" href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
         {experience.company}
         <ExternalLink size={11} strokeWidth={2} />
@@ -36,13 +38,15 @@
       <div class="entry__tags">
         {#each experience.tags as tag}
           {@const link = techLinks[tag]}
+          {@const color = tagColors[tag]}
+          {@const style = color ? `--tag-h: ${color.hue}; --tag-s: ${color.sat}%` : ""}
           {#if link}
-            <a class="entry__tag" href={link} target="_blank" rel="noopener noreferrer">
+            <a class="entry__tag" {style} href={link} target="_blank" rel="noopener noreferrer">
               {tag}
               <ExternalLink size={10} strokeWidth={2} />
             </a>
           {:else}
-            <span class="entry__tag">{tag}</span>
+            <span class="entry__tag" {style}>{tag}</span>
           {/if}
         {/each}
       </div>
@@ -133,6 +137,10 @@
     padding-bottom: 0;
   }
 
+  .entry__period-mobile {
+    display: none;
+  }
+
   .entry__title {
     font-size: var(--fs-h1);
     line-height: var(--leading-snug);
@@ -143,7 +151,7 @@
     font-family: var(--font-sans);
     font-size: var(--fs-small);
     color: var(--fg-muted);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.75rem;
   }
 
   .entry__company-link {
@@ -178,7 +186,7 @@
   .entry__description {
     font-family: var(--font-sans);
     font-size: var(--fs-body);
-    color: var(--fg-muted);
+    color: var(--fg);
     line-height: var(--leading-body);
   }
 
@@ -186,10 +194,12 @@
     display: flex;
     flex-wrap: wrap;
     gap: var(--space-xs);
-    margin-top: 0.6rem;
+    margin-top: 0.875rem;
   }
 
   .entry__tag {
+    --tag-h: 0;
+    --tag-s: 0%;
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -197,16 +207,24 @@
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: var(--fg-subtle);
-    background: var(--bg-subtle);
+    color: hsl(var(--tag-h) var(--tag-s) 38%);
+    background: linear-gradient(
+      135deg,
+      hsla(var(--tag-h), var(--tag-s), 50%, 0.1) 0%,
+      hsla(var(--tag-h), var(--tag-s), 40%, 0.05) 100%
+    );
+    border: 1px solid hsla(var(--tag-h), var(--tag-s), 45%, 0.2);
+    box-shadow:
+      inset 0 1px 0 hsla(var(--tag-h), var(--tag-s), 90%, 0.25),
+      0 1px 3px rgba(0, 0, 0, 0.06);
     padding: 0.2rem 0.6rem;
-    border-radius: 2px;
+    border-radius: 100px;
     text-decoration: none;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
   a.entry__tag:hover {
-    color: var(--fg);
+    color: hsl(var(--tag-h) var(--tag-s) 28%);
   }
 
   .entry__tag :global(svg) {
@@ -232,16 +250,22 @@
       display: none;
     }
 
+    .entry__period-mobile {
+      display: block;
+      font-family: var(--font-mono);
+      font-size: var(--fs-xs);
+      color: var(--fg-subtle);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 0.25rem;
+    }
+
     .entry__line {
       grid-column: 1;
     }
 
     .entry__content {
       grid-column: 2;
-    }
-
-    .entry__company::before {
-      content: attr(data-period);
     }
   }
 </style>

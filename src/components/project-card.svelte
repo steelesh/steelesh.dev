@@ -3,6 +3,7 @@
 
   import { ExternalLink } from "@lucide/svelte";
   import { scrollReveal } from "$lib/actions/scroll-reveal";
+  import { tagColors } from "$lib/data/tag-colors";
   import { techLinks } from "$lib/data/tech-links";
 
   type Props = {
@@ -19,13 +20,15 @@
   <div class="card__tags">
     {#each project.tags as tag}
       {@const link = techLinks[tag]}
+      {@const color = tagColors[tag]}
+      {@const style = color ? `--tag-h: ${color.hue}; --tag-s: ${color.sat}%` : ""}
       {#if link}
-        <a class="card__tag" href={link} target="_blank" rel="noopener noreferrer">
+        <a class="card__tag" {style} href={link} target="_blank" rel="noopener noreferrer">
           {tag}
           <ExternalLink size={10} strokeWidth={2} />
         </a>
       {:else}
-        <span class="card__tag">{tag}</span>
+        <span class="card__tag" {style}>{tag}</span>
       {/if}
     {/each}
   </div>
@@ -64,6 +67,8 @@
   }
 
   .card__tag {
+    --tag-h: 0;
+    --tag-s: 0%;
     display: inline-flex;
     align-items: center;
     gap: 0.3rem;
@@ -71,16 +76,24 @@
     font-size: var(--fs-xs);
     letter-spacing: var(--tracking-wide);
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.5);
-    background: rgba(255, 255, 255, 0.08);
+    color: hsl(var(--tag-h) var(--tag-s) 75%);
+    background: linear-gradient(
+      135deg,
+      hsla(var(--tag-h), var(--tag-s), 50%, 0.15) 0%,
+      hsla(var(--tag-h), var(--tag-s), 40%, 0.08) 100%
+    );
+    border: 1px solid hsla(var(--tag-h), var(--tag-s), 60%, 0.18);
+    box-shadow:
+      inset 0 1px 0 hsla(var(--tag-h), var(--tag-s), 80%, 0.12),
+      0 1px 3px rgba(0, 0, 0, 0.15);
     padding: 0.2rem 0.6rem;
-    border-radius: 2px;
+    border-radius: 100px;
     text-decoration: none;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
   a.card__tag:hover {
-    color: #ffffff;
+    color: hsl(var(--tag-h) var(--tag-s) 90%);
   }
 
   .card__tag :global(svg) {

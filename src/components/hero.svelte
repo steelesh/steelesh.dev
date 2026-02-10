@@ -8,14 +8,17 @@
   <DotGrid />
   <span class="hero__index" use:scrollReveal={{ delay: 50, y: 15 }}>[1]</span>
   <div class="hero__content">
+    <div class="hero__photo hero__photo--mobile" use:scrollReveal={{ delay: 50, y: 30 }}>
+      <enhanced:img src={portrait} alt="Portrait of Steele Shreve" />
+    </div>
     <h1 class="hero__heading" use:scrollReveal={{ delay: 100, y: 40 }}>
       I'm Steele Shreve
-      <span class="hero__photo">
+      <span class="hero__photo hero__photo--desktop">
         <enhanced:img src={portrait} alt="Portrait of Steele Shreve" />
-      </span>,
+      </span><span class="hero__comma">,</span>
     </h1>
     <p class="hero__role" use:scrollReveal={{ delay: 300, y: 30 }}>software engineer.</p>
-    <p class="hero__sub-text" use:scrollReveal={{ delay: 500, y: 20 }}>📍 Based in Chicago, IL.</p>
+    <p class="hero__sub-text" use:scrollReveal={{ delay: 500, y: 20 }}>Based in Chicago, IL.</p>
   </div>
   <div class="hero__scroll" aria-hidden="true">
     <span class="hero__scroll-text">Scroll</span>
@@ -60,17 +63,9 @@
   }
 
   .hero__photo {
-    display: inline-block;
-    width: clamp(4rem, 7vw, 6rem);
-    height: clamp(4rem, 7vw, 6rem);
     border-radius: 0.75rem;
     overflow: hidden;
     flex-shrink: 0;
-    transition: transform 300ms ease-in-out;
-  }
-
-  .hero__photo:hover {
-    transform: scale(1.75);
   }
 
   .hero__photo :global(img) {
@@ -78,6 +73,21 @@
     height: 100%;
     object-fit: cover;
     object-position: center 15%;
+  }
+
+  .hero__photo--desktop {
+    display: inline-block;
+    width: clamp(5rem, 8vw, 7.5rem);
+    height: clamp(5rem, 8vw, 7.5rem);
+    transition: transform 300ms ease-in-out;
+  }
+
+  .hero__photo--desktop:hover {
+    transform: scale(1.75);
+  }
+
+  .hero__photo--mobile {
+    display: none;
   }
 
   .hero__role {
@@ -92,6 +102,27 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+
+  @media (max-width: 768px) {
+    .hero__photo--desktop {
+      display: none;
+    }
+
+    .hero__photo--mobile {
+      display: block;
+      width: 6.5rem;
+      height: 6.5rem;
+      margin: 0 auto 1.5rem;
+    }
+
+    .hero__heading {
+      display: block;
+    }
+
+    .hero__role {
+      margin-top: 0;
+    }
   }
 
   .hero__index {
@@ -115,15 +146,15 @@
     letter-spacing: 0.05em;
     background: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.08) 0%,
-      rgba(255, 255, 255, 0.03) 100%
+      rgba(0, 0, 0, 0.3) 0%,
+      rgba(0, 0, 0, 0.45) 100%
     );
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
-      0 4px 16px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      0 4px 16px rgba(0, 0, 0, 0.5),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
     padding: 0.45em 1.1em;
     border-radius: 100px;
   }

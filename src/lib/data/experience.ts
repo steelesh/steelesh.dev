@@ -2,7 +2,7 @@ import type { Experience } from "$lib/types";
 
 export const experiences: Experience[] = [
   {
-    title: "Software Engineer",
+    title: "Backend Software Engineer",
     company: "Manifest",
     companyUrl: "https://usemanifest.com/",
     location: "Chicago, IL",
