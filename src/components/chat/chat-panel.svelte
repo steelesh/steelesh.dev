@@ -45,7 +45,7 @@
     return context.title;
   });
 
-  const isDesktop = new MediaQuery("min-width: 769px");
+  const isDesktop = new MediaQuery("pointer: fine");
 
   $effect(() => {
     if (isDesktop.current)
