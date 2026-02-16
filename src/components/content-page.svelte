@@ -11,6 +11,7 @@
   import ShareButton from "$components/share-button.svelte";
   import TableOfContents from "$components/table-of-contents.svelte";
   import ThemeSwitcher from "$components/theme-switcher.svelte";
+  import ViewCounter from "$components/view-counter.svelte";
   import { copyCode } from "$lib/actions/copy-code";
   import { animateChildren } from "$lib/actions/scroll-animate";
   import * as config from "$lib/config";
@@ -111,37 +112,19 @@
   $effect(() => {
     if (!browser || devOnly || standalone)
       return;
-    const cacheKey = `comments:${page.url.pathname}`;
-    const cached = sessionStorage.getItem(cacheKey);
-    if (cached) {
-      try {
-        const { count, ts } = JSON.parse(cached);
-        if (Date.now() - ts < 5 * 60 * 1000) {
-          commentCount = count;
-          return;
-        }
+
+    function onGiscusMessage(event: MessageEvent) {
+      if (event.origin !== "https://giscus.app")
+        return;
+      const data = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+      if (data?.giscus?.discussion) {
+        const d = data.giscus.discussion;
+        commentCount = (d.totalCommentCount ?? 0) + (d.totalReplyCount ?? 0);
       }
-      catch {}
     }
-    const params = new URLSearchParams({
-      repo: "steelesh/steelesh.dev",
-      term: page.url.pathname,
-      category: "Announcements",
-      strict: "true",
-      first: "1",
-      last: "0",
-      number: "0",
-    });
-    fetch(`https://giscus.app/api/discussions?${params}`)
-      .then(r => r.json())
-      .then((data) => {
-        if (data?.discussion) {
-          const count = (data.discussion.totalCommentCount ?? 0) + (data.discussion.totalReplyCount ?? 0);
-          commentCount = count;
-          sessionStorage.setItem(cacheKey, JSON.stringify({ count, ts: Date.now() }));
-        }
-      })
-      .catch(() => {});
+
+    window.addEventListener("message", onGiscusMessage);
+    return () => window.removeEventListener("message", onGiscusMessage);
   });
 
   type Theme = "light" | "dark";
@@ -317,6 +300,9 @@
           {#if updatedAt}
             <span class="study__meta-sep" aria-hidden="true">&middot;</span>
             <span>Updated <time datetime={updatedAt}>{formatDate(updatedAt)}</time></span>
+          {/if}
+          {#if !devOnly && !standalone}
+            <ViewCounter {slug} />
           {/if}
         </div>
       {/if}
@@ -626,8 +612,15 @@
   .study__cover-img {
     display: block;
     width: 100%;
+    height: 100%;
     object-fit: cover;
     object-position: center;
+  }
+
+  .study__cover--expanded .study__cover-img,
+  .study__cover--full .study__cover-img {
+    height: auto;
+    max-height: 400px;
   }
 
   .study__content {
