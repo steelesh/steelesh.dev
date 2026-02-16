@@ -87,6 +87,11 @@ app.onError((err, c) => {
   );
 });
 
+app.get("/robots.txt", (c) => {
+  c.header("Content-Type", "text/plain");
+  return c.body("User-agent: *\nDisallow: /\n");
+});
+
 app.route("/", health);
 app.route("/", chat);
 app.route("/", likes);
