@@ -11,7 +11,6 @@
   import ShareButton from "$components/share-button.svelte";
   import TableOfContents from "$components/table-of-contents.svelte";
   import ThemeSwitcher from "$components/theme-switcher.svelte";
-  import ViewCounter from "$components/view-counter.svelte";
   import { copyCode } from "$lib/actions/copy-code";
   import { animateChildren } from "$lib/actions/scroll-animate";
   import * as config from "$lib/config";
@@ -300,9 +299,6 @@
           {#if updatedAt}
             <span class="study__meta-sep" aria-hidden="true">&middot;</span>
             <span>Updated <time datetime={updatedAt}>{formatDate(updatedAt)}</time></span>
-          {/if}
-          {#if !devOnly && !standalone}
-            <ViewCounter {slug} />
           {/if}
         </div>
       {/if}

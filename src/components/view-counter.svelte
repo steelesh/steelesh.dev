@@ -17,7 +17,11 @@
     if (!browser)
       return;
 
-    recordView(slug).catch(() => {});
+    const key = `viewed:${slug}`;
+    if (!sessionStorage.getItem(key)) {
+      sessionStorage.setItem(key, "1");
+      recordView(slug).catch(() => {});
+    }
 
     getViewCount(slug).then((data) => {
       count = data.count;

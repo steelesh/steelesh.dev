@@ -16,7 +16,7 @@
         <enhanced:img src={portrait} alt="Portrait of Steele" />
       </span><span class="hero__comma">,</span>
     </h1>
-    <p class="hero__role" data-animate style="--start: 300ms; --y: 30px">Backend Software Engineer.</p>
+    <p class="hero__role" data-animate style="--start: 300ms; --y: 30px">Software Engineer.</p>
     <p class="hero__sub-text" data-animate style="--start: 500ms">Based in Chicago, IL.</p>
   </div>
   <div class="hero__scroll" data-animate style="--start: 700ms; --y: 10px" aria-hidden="true">

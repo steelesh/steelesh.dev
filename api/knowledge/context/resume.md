@@ -1,6 +1,6 @@
 ## About Steele
 
-Steele is a backend software engineer based in Chicago, IL. He graduated from the University of Cincinnati in 2025 with a Bachelor of Science in Information Technology, concentrating in Software Application Development.
+Steele is a software engineer based in Chicago, IL. He graduated from the University of Cincinnati in 2025 with a Bachelor of Science in Information Technology, concentrating in Software Application Development.
 
 ## Current Role
 
