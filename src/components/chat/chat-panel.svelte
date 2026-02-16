@@ -4,6 +4,7 @@
   import { ArrowUp, FileText, RotateCcw, Square, X } from "@lucide/svelte";
   import { streamChatMessage } from "$lib/api";
   import { getGreeting, getSuggestions } from "$lib/data/chat-suggestions";
+  import { MediaQuery } from "svelte/reactivity";
 
   import ChatMessage from "./chat-message.svelte";
   import ChatSuggestions from "./chat-suggestions.svelte";
@@ -44,8 +45,11 @@
     return context.title;
   });
 
+  const isDesktop = new MediaQuery("min-width: 769px");
+
   $effect(() => {
-    inputEl?.focus();
+    if (isDesktop.current)
+      inputEl?.focus();
   });
 
   function scrollToBottom() {
@@ -610,6 +614,10 @@
   @media (max-width: 768px) {
     .panel {
       --noise-opacity: 0.08;
+    }
+
+    .panel__field {
+      font-size: 1rem; /* 16px — prevents iOS Safari auto-zoom */
     }
   }
 

@@ -604,6 +604,10 @@
       max-height: calc(100svh - 4rem);
     }
 
+    .modal__input {
+      font-size: 1rem; /* 16px — prevents iOS Safari auto-zoom */
+    }
+
     .modal__footer {
       display: none;
     }

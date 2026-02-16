@@ -503,7 +503,7 @@
       grid-template-columns: 1fr;
       text-align: center;
       justify-items: center;
-      padding-bottom: var(--space-xl);
+      padding-bottom: var(--space-2xl);
     }
 
     .showcase__scene:last-child {
