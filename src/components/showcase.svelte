@@ -486,10 +486,28 @@
   }
 
   @media (max-width: 640px) {
+    .showcase__track {
+      height: auto;
+    }
+
+    .showcase__sticky {
+      position: relative;
+      height: auto;
+      padding: var(--space-section) 0;
+    }
+
     .showcase__scene {
+      position: relative;
+      opacity: 1;
+      transform: none;
       grid-template-columns: 1fr;
       text-align: center;
       justify-items: center;
+      padding-bottom: var(--space-xl);
+    }
+
+    .showcase__scene:last-child {
+      padding-bottom: 0;
     }
 
     .showcase__scene-left {
