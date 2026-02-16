@@ -1,13 +1,21 @@
 <script lang="ts">
   import ExperienceEntry from "$components/experience-entry.svelte";
   import { roughHighlight } from "$lib/actions/rough-highlight";
-  import { scrollReveal } from "$lib/actions/scroll-reveal";
   import { experiences } from "$lib/data/experience";
-  import { onMount } from "svelte";
+  import { getLenis } from "$lib/lenis";
+  import { MediaQuery } from "svelte/reactivity";
 
-  let entriesEl: HTMLDivElement;
+  const isDesktop = new MediaQuery("min-width: 769px");
 
-  onMount(() => {
+  type ExperienceFilter = "work" | "education";
+  let filter: ExperienceFilter = $state("work");
+  const filteredExperiences = $derived(experiences.filter(e => e.type === filter));
+
+  let entriesEl = $state<HTMLDivElement>();
+
+  $effect(() => {
+    if (!entriesEl)
+      return;
     const reduced = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
     ).matches;
@@ -15,29 +23,29 @@
     let ticking = false;
     let snapTimer: ReturnType<typeof setTimeout>;
     let isSnapping = false;
-    let cycleComplete = false;
-    let lastSeen = false;
+
+    function applyFocus(entryList: HTMLElement[], focusIdx: number) {
+      for (let i = 0; i < entryList.length; i++) {
+        const focus = i === focusIdx ? 1 : 0;
+        const passed = i <= focusIdx ? 1 : 0;
+        entryList[i].style.setProperty("--focus", String(focus));
+        entryList[i].style.setProperty("--passed", String(passed));
+        entryList[i].style.setProperty("--active", String(focus));
+        entryList[i].style.setProperty("--active-events", focus ? "auto" : "none");
+      }
+    }
 
     function update() {
       const entries
-        = entriesEl.querySelectorAll<HTMLElement>("[data-entry]");
+        = entriesEl!.querySelectorAll<HTMLElement>("[data-entry]");
       const entryList = Array.from(entries);
 
-      if (cycleComplete || reduced) {
+      if (reduced) {
         for (const entry of entryList) {
           entry.style.setProperty("--focus", "1");
           entry.style.setProperty("--passed", "1");
-        }
-        ticking = false;
-        return;
-      }
-
-      const rect = entriesEl.getBoundingClientRect();
-      if (lastSeen && rect.bottom < 0) {
-        cycleComplete = true;
-        for (const entry of entryList) {
-          entry.style.setProperty("--focus", "1");
-          entry.style.setProperty("--passed", "1");
+          entry.style.setProperty("--active", "1");
+          entry.style.setProperty("--active-events", "auto");
         }
         ticking = false;
         return;
@@ -57,26 +65,13 @@
         }
       }
 
-      if (closestIdx === entryList.length - 1) {
-        lastSeen = true;
-      }
-
-      for (let i = 0; i < entryList.length; i++) {
-        const focus = i === closestIdx ? 1 : 0;
-        const passed = i <= closestIdx ? 1 : 0;
-        entryList[i].style.setProperty("--focus", String(focus));
-        entryList[i].style.setProperty("--passed", String(passed));
-      }
-
+      applyFocus(entryList, closestIdx);
       ticking = false;
     }
 
     function snapToClosest() {
-      if (cycleComplete)
-        return;
-
       const entries
-        = entriesEl.querySelectorAll<HTMLElement>("[data-entry]");
+        = entriesEl!.querySelectorAll<HTMLElement>("[data-entry]");
       const viewCenter = window.innerHeight / 2;
 
       let closest: HTMLElement | null = null;
@@ -93,14 +88,25 @@
       }
 
       if (closest && closestDist > 20) {
-        const rect = closest.getBoundingClientRect();
-        const entryCenter = rect.top + rect.height / 2;
-        const offset = entryCenter - viewCenter;
         isSnapping = true;
-        window.scrollBy({ top: offset, behavior: "smooth" });
-        setTimeout(() => {
-          isSnapping = false;
-        }, 600);
+        const lenis = getLenis();
+        if (lenis) {
+          lenis.scrollTo(closest, {
+            offset: -window.innerHeight / 2 + closest.offsetHeight / 2,
+            onComplete: () => {
+              isSnapping = false;
+            },
+          });
+        }
+        else {
+          const rect = closest.getBoundingClientRect();
+          const entryCenter = rect.top + rect.height / 2;
+          const offset = entryCenter - viewCenter;
+          window.scrollBy({ top: offset, behavior: "smooth" });
+          setTimeout(() => {
+            isSnapping = false;
+          }, 600);
+        }
       }
     }
 
@@ -110,10 +116,10 @@
         ticking = true;
       }
 
-      if (!cycleComplete && !isSnapping && !reduced) {
+      if (isDesktop.current && !isSnapping && !reduced) {
         clearTimeout(snapTimer);
         snapTimer = setTimeout(() => {
-          const rect = entriesEl.getBoundingClientRect();
+          const rect = entriesEl!.getBoundingClientRect();
           const inView = rect.top < window.innerHeight && rect.bottom > 0;
           if (inView)
             snapToClosest();
@@ -126,31 +132,34 @@
       if (!clickedEntry)
         return;
 
-      cycleComplete = false;
-      lastSeen = false;
-
-      const entries = entriesEl.querySelectorAll<HTMLElement>("[data-entry]");
+      const entries = entriesEl!.querySelectorAll<HTMLElement>("[data-entry]");
       const entryList = Array.from(entries);
       const clickedIdx = entryList.indexOf(clickedEntry);
 
-      for (let i = 0; i < entryList.length; i++) {
-        const focus = i === clickedIdx ? 1 : 0;
-        const passed = i <= clickedIdx ? 1 : 0;
-        entryList[i].style.setProperty("--focus", String(focus));
-        entryList[i].style.setProperty("--passed", String(passed));
-      }
+      applyFocus(entryList, clickedIdx);
 
       const rect = clickedEntry.getBoundingClientRect();
       const entryCenter = rect.top + rect.height / 2;
       const viewCenter = window.innerHeight / 2;
       const offset = entryCenter - viewCenter;
 
-      if (Math.abs(offset) > 20) {
+      if (isDesktop.current && Math.abs(offset) > 20) {
         isSnapping = true;
-        window.scrollBy({ top: offset, behavior: "smooth" });
-        setTimeout(() => {
-          isSnapping = false;
-        }, 600);
+        const lenis = getLenis();
+        if (lenis) {
+          lenis.scrollTo(clickedEntry, {
+            offset: -window.innerHeight / 2 + clickedEntry.offsetHeight / 2,
+            onComplete: () => {
+              isSnapping = false;
+            },
+          });
+        }
+        else {
+          window.scrollBy({ top: offset, behavior: "smooth" });
+          setTimeout(() => {
+            isSnapping = false;
+          }, 600);
+        }
       }
     }
 
@@ -160,43 +169,78 @@
 
     return () => {
       window.removeEventListener("scroll", onScroll);
-      entriesEl.removeEventListener("entryactivate", onEntryActivate);
+      entriesEl?.removeEventListener("entryactivate", onEntryActivate);
       clearTimeout(snapTimer);
     };
   });
 </script>
 
-<section class="timeline" id="experience" aria-labelledby="experience-heading">
+<section class="timeline noise-overlay" id="experience" aria-labelledby="experience-heading" style="--noise-opacity: 0.15">
   <div class="timeline__inner">
-    <span class="section-index" use:scrollReveal={{ y: 15 }}>[2]</span>
-    <h2 class="timeline__heading" id="experience-heading" use:scrollReveal={{ y: 20 }}>
-      <span use:roughHighlight>Experience</span>
+    <span class="section-index" data-animate style="--y: 15px">[2]</span>
+    <h2 class="timeline__heading" id="experience-heading" data-animate>
+      <!-- svelte-ignore a11y_interactive_supports_focus -->
+      <span class="timeline__filters" role="tablist" aria-label="Experience type" onkeydown={(e: KeyboardEvent) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+          e.preventDefault();
+          filter = filter === "work" ? "education" : "work";
+          (e.currentTarget as HTMLElement).querySelector<HTMLButtonElement>(`[aria-selected="true"]`)?.focus();
+        }
+      }}>
+        <button
+          class="timeline__filter"
+          class:timeline__filter--active={filter === "work"}
+          role="tab"
+          aria-selected={filter === "work"}
+          tabindex={filter === "work" ? 0 : -1}
+          onclick={() => (filter = "work")}
+        >
+          {#if filter === "work"}
+            <span {@attach roughHighlight()}>Experience</span>
+          {:else}
+            Experience
+          {/if}
+        </button>
+        <span class="timeline__sep" role="presentation" aria-hidden="true">/</span>
+        <button
+          class="timeline__filter"
+          class:timeline__filter--active={filter === "education"}
+          role="tab"
+          aria-selected={filter === "education"}
+          tabindex={filter === "education" ? 0 : -1}
+          onclick={() => (filter = "education")}
+        >
+          {#if filter === "education"}
+            <span {@attach roughHighlight()}>Education</span>
+          {:else}
+            Education
+          {/if}
+        </button>
+      </span>
     </h2>
-    <div class="timeline__entries" bind:this={entriesEl}>
-      {#each experiences as experience}
-        <ExperienceEntry {experience} />
-      {/each}
-    </div>
+    {#key filter}
+      <div class="timeline__entries" role="tabpanel" aria-label="{filter === "work" ? "Experience" : "Education"} entries" bind:this={entriesEl}>
+        {#each filteredExperiences as experience}
+          <ExperienceEntry {experience} />
+        {/each}
+      </div>
+    {/key}
   </div>
 </section>
 
 <style>
   .timeline {
+    --bg: #1a1917;
+    --bg-subtle: #242320;
+    --bg-muted: #2e2d2a;
+    --fg: #f0ede8;
+    --fg-muted: #a8a29e;
+    --fg-subtle: #8a8480;
+    --border-color: rgba(240, 237, 232, 0.1);
     padding: var(--space-section) var(--space-md);
-    background: var(--bg);
+    background: var(--dark-bg);
+    color: var(--fg);
     position: relative;
-    overflow: hidden;
-  }
-
-  .timeline::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 128px;
-    opacity: 0.7;
-    pointer-events: none;
   }
 
   .timeline__inner {
@@ -211,15 +255,51 @@
     margin-bottom: var(--space-xl);
   }
 
-  @media (prefers-color-scheme: dark) {
-    .timeline {
-      --bg: #faf8f5;
-      --bg-subtle: #f0ede8;
-      --bg-muted: #e8e4de;
-      --fg: #333334;
-      --fg-muted: #6b6560;
-      --fg-subtle: #9b9590;
-      --border-color: rgba(51, 51, 52, 0.12);
+  .timeline__filters {
+    display: inline;
+  }
+
+  .timeline__filter {
+    font: inherit;
+    background: none;
+    border: none;
+    padding: 0;
+    color: rgba(240, 237, 232, 0.4);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .timeline__filter:hover {
+    color: rgba(240, 237, 232, 0.6);
+  }
+
+  .timeline__filter--active {
+    color: var(--dark-fg);
+    cursor: default;
+  }
+
+  .timeline__filter:focus-visible {
+    outline: 1px solid rgba(240, 237, 232, 0.4);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+
+  .timeline__sep {
+    color: rgba(240, 237, 232, 0.4);
+    margin: 0 0.15em;
+    user-select: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .timeline__filter {
+      transition: none;
     }
   }
+
+  @media (max-width: 768px) {
+    .timeline {
+      --noise-opacity: 0.08;
+    }
+  }
+
 </style>

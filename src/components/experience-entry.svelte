@@ -2,14 +2,13 @@
   import type { Experience } from "$lib/types";
 
   import { ExternalLink } from "@lucide/svelte";
-  import { tagColors } from "$lib/data/tag-colors";
-  import { techLinks } from "$lib/data/tech-links";
 
-  type Props = {
+  interface Props {
     experience: Experience;
-  };
+    interactive?: boolean;
+  }
 
-  const { experience }: Props = $props();
+  const { experience, interactive = true }: Props = $props();
 
   const isCurrent = $derived(experience.period.includes("Present"));
 
@@ -20,27 +19,33 @@
   }
 </script>
 
-<div class="entry" data-entry>
-  <div class="entry__date">
-    <span class="entry__period">{#if isCurrent}{experience.period.replace(" Present", "")} <strong class="entry__present">Present</strong>{:else}{experience.period}{/if}</span>
-  </div>
+<!-- svelte-ignore a11y_click_events_have_key_events -->
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div
+  class="entry"
+  class:entry--interactive={interactive}
+  data-entry
+  onclick={interactive
+    ? (e) => {
+      if (!(e.target as HTMLElement).closest("a, button"))
+        activateEntry(e.currentTarget);
+    }
+    : undefined}
+>
   <div class="entry__line">
     <span class="entry__dot" class:entry__dot--current={isCurrent}></span>
   </div>
+  <span class="entry__period">{#if isCurrent}{experience.period.replace(" Present", "")} <strong class="entry__present">Present</strong>{:else}{experience.period}{/if}</span>
   <div class="entry__content">
-    <span class="entry__period-mobile">{#if isCurrent}{experience.period.replace(" Present", "")} <strong class="entry__present">Present</strong>{:else}{experience.period}{/if}</span>
-    <h3
-      class="entry__title"
-      role="button"
-      tabindex="0"
-      onclick={e => activateEntry(e.currentTarget)}
-      onkeydown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          activateEntry(e.currentTarget);
-        }
-      }}
-    >{experience.title}</h3>
+    <h3 class="entry__title">
+      {#if interactive}
+        <button class="entry__activate" type="button" onclick={e => activateEntry(e.currentTarget)}>
+          {experience.title}
+        </button>
+      {:else}
+        {experience.title}
+      {/if}
+    </h3>
     <p class="entry__company">
       <a class="entry__company-link" href={experience.companyUrl} target="_blank" rel="noopener noreferrer">
         {experience.company}
@@ -51,48 +56,46 @@
       {/if}
     </p>
     <p class="entry__description">{experience.description}</p>
-    {#if experience.tags?.length}
-      <div class="entry__tags">
-        {#each experience.tags as tag}
-          {@const link = techLinks[tag]}
-          {@const color = tagColors[tag]}
-          {@const style = color ? `--tag-h: ${color.hue}; --tag-s: ${color.sat}%` : ""}
-          {#if link}
-            <a class="entry__tag" {style} href={link} target="_blank" rel="noopener noreferrer">
-              {tag}
-              <ExternalLink size={10} strokeWidth={2} />
-            </a>
-          {:else}
-            <span class="entry__tag" {style}>{tag}</span>
-          {/if}
-        {/each}
-      </div>
-    {/if}
   </div>
 </div>
 
 <style>
   .entry {
     display: grid;
-    grid-template-columns: 120px 24px 1fr;
+    grid-template-columns: 24px 1fr;
     gap: 0 var(--space-sm);
+    position: relative;
   }
 
-  .entry__date {
-    text-align: right;
-    padding-top: 0.3rem;
-    opacity: calc(0.2 + var(--focus, 1) * 0.8);
-    transition: opacity 150ms ease-out;
+  .entry--interactive {
+    cursor: pointer;
   }
 
   .entry__period {
+    grid-column: 2;
+    display: block;
     font-family: var(--font-mono);
-    font-size: var(--fs-small);
-    color: var(--fg-subtle);
-    letter-spacing: var(--tracking-wide);
+    font-size: var(--fs-xs);
+    color: var(--fg-muted);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.25rem;
+  }
+
+  @media (min-width: 1100px) {
+    .entry__period {
+      position: absolute;
+      right: calc(100% + 2.5rem);
+      top: -1.1rem;
+      margin-bottom: 0;
+      white-space: nowrap;
+      text-align: right;
+    }
   }
 
   .entry__line {
+    grid-column: 1;
+    grid-row: 1 / -1;
     display: flex;
     justify-content: center;
     position: relative;
@@ -112,6 +115,10 @@
   .entry:last-child .entry__line::before {
     bottom: unset;
     height: 12px;
+  }
+
+  .entry:only-child .entry__line::before {
+    display: none;
   }
 
   .entry__dot {
@@ -148,6 +155,7 @@
   }
 
   .entry__content {
+    grid-column: 2;
     padding-bottom: clamp(3rem, 8vh, 5rem);
     opacity: calc(0.2 + var(--focus, 1) * 0.8);
     transform: scale(calc(0.9 + var(--focus, 1) * 0.1));
@@ -163,20 +171,24 @@
     font-weight: 600;
   }
 
-  .entry__period-mobile {
-    display: none;
-  }
-
   .entry__title {
     font-size: var(--fs-h1);
     line-height: var(--leading-snug);
     margin-bottom: 0.25rem;
-    cursor: pointer;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
-  .entry__title:hover {
-    color: var(--fg-muted);
+  .entry__activate {
+    all: unset;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .entry__activate:focus-visible {
+    outline: 2px solid var(--fg-muted);
+    outline-offset: 2px;
+    border-radius: 2px;
   }
 
   .entry__company {
@@ -194,6 +206,8 @@
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.15em;
+    padding: 0.5rem 0;
+    margin: -0.5rem 0;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
@@ -212,7 +226,7 @@
   }
 
   .entry__location {
-    color: var(--fg-subtle);
+    color: var(--fg-muted);
   }
 
   .entry__description {
@@ -220,82 +234,35 @@
     font-size: var(--fs-body);
     color: var(--fg);
     line-height: var(--leading-body);
+    white-space: pre-line;
   }
 
-  .entry__tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-xs);
-    margin-top: 0.875rem;
+  @media (prefers-reduced-motion: reduce) {
+    .entry__line::before,
+    .entry__dot,
+    .entry__content,
+    .entry__title,
+    .entry__company-link,
+    .entry__company-link :global(svg) {
+      transition: none;
+    }
+
+    .entry__dot--current {
+      animation: none;
+    }
   }
 
-  .entry__tag {
-    --tag-h: 0;
-    --tag-s: 0%;
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--font-sans);
-    font-size: var(--fs-xs);
-    letter-spacing: var(--tracking-wide);
-    text-transform: uppercase;
-    color: hsl(var(--tag-h) var(--tag-s) 38%);
-    background: linear-gradient(
-      135deg,
-      hsla(var(--tag-h), var(--tag-s), 50%, 0.1) 0%,
-      hsla(var(--tag-h), var(--tag-s), 40%, 0.05) 100%
-    );
-    border: 1px solid hsla(var(--tag-h), var(--tag-s), 45%, 0.2);
-    box-shadow:
-      inset 0 1px 0 hsla(var(--tag-h), var(--tag-s), 90%, 0.25),
-      0 1px 3px rgba(0, 0, 0, 0.06);
-    padding: 0.2rem 0.6rem;
-    border-radius: 100px;
-    text-decoration: none;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  a.entry__tag:hover {
-    color: hsl(var(--tag-h) var(--tag-s) 28%);
-  }
-
-  .entry__tag :global(svg) {
-    width: 0;
-    opacity: 0;
-    overflow: hidden;
-    flex-shrink: 0;
-    transition:
-      width 200ms ease,
-      margin-left 200ms ease,
-      opacity 200ms ease;
-  }
-
-  a.entry__tag:hover :global(svg) {
-    width: 10px;
-    margin-left: 0.3rem;
-    opacity: 1;
-  }
-
-  @media (max-width: 640px) {
+  @media (max-width: 768px) {
     .entry {
       grid-template-columns: 16px 1fr;
     }
 
-    .entry__date {
-      display: none;
-    }
-
-    .entry__period-mobile {
-      display: block;
-      font-family: var(--font-mono);
-      font-size: var(--fs-xs);
-      color: var(--fg-subtle);
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      margin-bottom: 0.25rem;
+    .entry__line {
+      grid-column: 1;
     }
 
     .entry__line {
-      grid-column: 1;
+      grid-row: 1 / span 3;
     }
 
     .entry__content {

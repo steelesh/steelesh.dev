@@ -9,42 +9,34 @@ main {
     Arial,
     sans-serif;
 
-  /* Foreground */
   --color-fg-default: #f0ede8;
   --color-fg-muted: #a8a29e;
   --color-fg-subtle: #78716c;
 
-  /* Canvas */
   --color-canvas-default: #1a1917;
   --color-canvas-overlay: #242320;
   --color-canvas-inset: #141312;
   --color-canvas-subtle: #242320;
 
-  /* Borders */
   --color-border-default: rgba(240, 237, 232, 0.1);
   --color-border-muted: rgba(240, 237, 232, 0.06);
   --color-neutral-muted: rgba(240, 237, 232, 0.06);
 
-  /* Accent — bronze/gold */
   --color-accent-fg: #c4956a;
   --color-accent-emphasis: #c4956a;
   --color-accent-muted: rgba(196, 149, 106, 0.4);
   --color-accent-subtle: rgba(196, 149, 106, 0.1);
 
-  /* Success — emerald */
   --color-success-fg: #10b981;
 
-  /* Attention — warm amber */
   --color-attention-fg: #d4a574;
   --color-attention-muted: rgba(212, 165, 116, 0.4);
   --color-attention-subtle: rgba(212, 165, 116, 0.15);
 
-  /* Danger */
   --color-danger-fg: #f85149;
   --color-danger-muted: rgba(248, 81, 73, 0.4);
   --color-danger-subtle: rgba(248, 81, 73, 0.1);
 
-  /* Buttons */
   --color-btn-text: #f0ede8;
   --color-btn-bg: #242320;
   --color-btn-border: rgba(240, 237, 232, 0.1);
@@ -56,7 +48,6 @@ main {
   --color-btn-active-border: rgba(240, 237, 232, 0.1);
   --color-btn-selected-bg: #1a1917;
 
-  /* Primary buttons — emerald */
   --color-btn-primary-text: #fff;
   --color-btn-primary-bg: #10b981;
   --color-btn-primary-border: rgba(240, 237, 232, 0.1);
@@ -70,24 +61,19 @@ main {
   --color-btn-primary-disabled-bg: rgba(16, 185, 129, 0.4);
   --color-btn-primary-disabled-border: rgba(240, 237, 232, 0.06);
 
-  /* Segmented control */
   --color-segmented-control-bg: rgba(240, 237, 232, 0.06);
   --color-segmented-control-button-bg: #242320;
   --color-segmented-control-button-selected-border: #c4956a;
 
-  /* Social / reactions */
   --color-action-list-item-default-hover-bg: rgba(240, 237, 232, 0.06);
   --color-social-reaction-bg-hover: rgba(196, 149, 106, 0.1);
   --color-social-reaction-bg-reacted-hover: rgba(196, 149, 106, 0.15);
 
-  /* Scale */
   --color-scale-gray-7: #242320;
   --color-scale-blue-8: #c4956a;
 
-  /* Shadows */
   --color-primer-shadow-inset: 0 0 transparent;
 
-  /* Syntax highlighting — Vesper-adjacent warm tones */
   --color-prettylights-syntax-comment: #78716c;
   --color-prettylights-syntax-constant: #c4956a;
   --color-prettylights-syntax-entity: #a78bfa;

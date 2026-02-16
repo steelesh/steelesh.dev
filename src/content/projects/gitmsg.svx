@@ -1,0 +1,58 @@
+## The Project
+
+A command-line tool that generates conventional commit messages from staged changes using a local LLM. It reads the output of `git diff --staged`, sends it to an Ollama model running on the same machine, and returns a formatted message that follows the [Conventional Commits](https://www.conventionalcommits.org/) specification. No API keys, no cloud services — everything runs locally. I called it GitMsg.
+
+## Background
+
+Writing good commit messages is tedious. Most developers default to vague one-liners or skip the description entirely. Conventional Commits solves the formatting problem, but it adds friction: choosing the right type, scoping the change, summarizing intent rather than mechanics. Tools like commitlint enforce the format after the fact, but they don't help you write the message in the first place.
+
+I wanted something that could look at a diff and draft a message I'd actually want to keep. Cloud-based solutions existed, but they required API keys and sent diffs to external servers. Ollama made it possible to run capable models locally with a simple HTTP API, so I built a CLI around it.
+
+## How It Works
+
+1. Run the CLI inside a Git repository with staged changes
+2. It captures the output of `git diff --staged`
+3. The diff is sent to a local Ollama model with a system prompt that enforces Conventional Commits formatting
+4. The model returns a commit message with a type, optional scope, subject line, and body
+5. The message is displayed for review — accept it, edit it, or regenerate
+
+If no changes are staged, it exits early with a helpful message. If Ollama isn't running, it tells you that too.
+
+## Tech Stack
+
+| Layer | Choice |
+|-------|--------|
+| Language | Go |
+| CLI framework | Cobra |
+| LLM runtime | Ollama |
+| LLM client | [Ollama Go SDK](https://pkg.go.dev/github.com/ollama/ollama/api) |
+| Default model | Llama 3.1 |
+| Distribution | Single binary (no dependencies) |
+
+## Architecture
+
+The codebase is split into three packages: `cmd` for the CLI entry point and flags, `git` for repository interaction, and `llm` for Ollama communication and prompt construction.
+
+### Git Integration
+
+- Shells out to `git diff --staged` and `git rev-parse --show-toplevel` to collect context
+- Detects whether the repository has prior commits to adjust the prompt (initial commit vs. incremental change)
+- Optionally reads the last five commit messages to match the project's existing style
+
+### Prompt Engineering
+
+- A system prompt defines the Conventional Commits spec, valid types (`feat`, `fix`, `refactor`, `docs`, `test`, `chore`, `ci`, `perf`, `build`, `style`), and formatting rules
+- The diff is injected as the user message with instructions to focus on intent rather than line-by-line description
+- Token limits are managed by truncating large diffs to the most relevant hunks
+
+### Ollama Client
+
+- Uses the official Ollama Go SDK to communicate with the local Ollama server
+- Streams the response token by token so the message appears progressively in the terminal
+- Falls back gracefully if the configured model isn't pulled yet, prompting the user to run `ollama pull`
+
+### Configuration
+
+- Defaults work out of the box — just have Ollama running with a model pulled
+- Config file in the repository root or home directory can override the model, temperature, and max tokens
+- CLI flags take precedence over config file values

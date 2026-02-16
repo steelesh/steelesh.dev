@@ -1,26 +1,25 @@
 <script lang="ts">
   import DotGrid from "$components/dot-grid.svelte";
-  import { scrollReveal } from "$lib/actions/scroll-reveal";
-  import portrait from "$lib/assets/mke_tool_portrait.jpg?enhanced";
+  import portrait from "$lib/assets/hero-portrait.jpg?enhanced";
 </script>
 
-<section class="hero" aria-label="Introduction">
+<section class="hero" id="hero" aria-label="Introduction">
   <DotGrid />
-  <span class="hero__index" use:scrollReveal={{ delay: 50, y: 15 }}>[1]</span>
+  <span class="hero__index" data-animate style="--start: 50ms; --y: 15px">[1]</span>
   <div class="hero__content">
-    <div class="hero__photo hero__photo--mobile" use:scrollReveal={{ delay: 50, y: 30 }}>
-      <enhanced:img src={portrait} alt="Portrait of Steele Shreve" />
+    <div class="hero__photo hero__photo--mobile" data-animate style="--start: 50ms; --y: 30px">
+      <enhanced:img src={portrait} alt="Portrait of Steele" />
     </div>
-    <h1 class="hero__heading" use:scrollReveal={{ delay: 100, y: 40 }}>
-      I'm Steele Shreve
+    <h1 class="hero__heading" data-animate style="--start: 100ms; --y: 40px">
+      Hi, I'm Steele
       <span class="hero__photo hero__photo--desktop">
-        <enhanced:img src={portrait} alt="Portrait of Steele Shreve" />
+        <enhanced:img src={portrait} alt="Portrait of Steele" />
       </span><span class="hero__comma">,</span>
     </h1>
-    <p class="hero__role" use:scrollReveal={{ delay: 300, y: 30 }}>software engineer.</p>
-    <p class="hero__sub-text" use:scrollReveal={{ delay: 500, y: 20 }}>Based in Chicago, IL.</p>
+    <p class="hero__role" data-animate style="--start: 300ms; --y: 30px">Backend Software Engineer.</p>
+    <p class="hero__sub-text" data-animate style="--start: 500ms">Based in Chicago, IL.</p>
   </div>
-  <div class="hero__scroll" aria-hidden="true">
+  <div class="hero__scroll" data-animate style="--start: 700ms; --y: 10px" aria-hidden="true">
     <span class="hero__scroll-text">Scroll</span>
     <span class="hero__scroll-line"></span>
   </div>
@@ -28,6 +27,7 @@
 
 <style>
   .hero {
+    --selection-bg: rgba(255, 255, 255, 0.1);
     min-height: 100svh;
     display: flex;
     flex-direction: column;
@@ -59,7 +59,7 @@
     font-weight: 500;
     line-height: 1.1;
     letter-spacing: -0.02em;
-    color: #ffffff;
+    color: var(--dark-fg);
   }
 
   .hero__photo {
@@ -127,12 +127,12 @@
 
   .hero__index {
     position: absolute;
-    top: 1.5rem;
+    top: var(--space-section);
     left: 1.5rem;
     z-index: 1;
     font-family: var(--font-mono);
     font-size: var(--fs-xs);
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(255, 255, 255, 0.58);
     letter-spacing: 0.05em;
   }
 
@@ -235,6 +235,20 @@
     }
     100% {
       transform: translateY(200%);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__sub-text::before {
+      animation: none;
+    }
+
+    .hero__scroll-line::after {
+      animation: none;
+    }
+
+    .hero__photo--desktop {
+      transition: none;
     }
   }
 </style>

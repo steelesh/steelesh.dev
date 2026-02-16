@@ -1,89 +1,122 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { page } from "$app/state";
+  import { getLenis } from "$lib/lenis";
 
-  const sections = ["hero", "experience", "projects", "contact"];
+  const sections = ["hero", "experience", "work", "contact"];
   const labels = ["Introduction", "Experience", "Projects", "Contact"];
   let activeIndex = $state(0);
+  const isHome = $derived(page.url.pathname === "/");
 
   function scrollTo(id: string) {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    const lenis = getLenis();
+    if (lenis)
+      lenis.scrollTo(`#${id}`);
+    else
+      document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   }
 
-  onMount(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) {
-            const id = entry.target.id || "hero";
-            const idx = sections.indexOf(id);
-            if (idx !== -1)
-              activeIndex = idx;
-          }
-        }
-      },
-      { threshold: 0.3 },
-    );
+  $effect(() => {
+    if (!isHome)
+      return;
 
-    for (const id of sections) {
-      const el
-        = id === "hero"
-          ? document.querySelector("section[aria-label='Introduction']")
-          : document.getElementById(id);
-      if (el) {
-        if (id === "hero")
+    const elements: (HTMLElement | null)[] = sections.map((id) => {
+      if (id === "hero") {
+        const el = document.querySelector<HTMLElement>("section[aria-label='Introduction']");
+        if (el && !el.id)
           el.id = "hero";
-        observer.observe(el);
+        return el;
       }
+      return document.getElementById(id);
+    });
+
+    function updateActive() {
+      const threshold = window.innerHeight * 0.4;
+      let current = 0;
+      for (let i = 0; i < elements.length; i++) {
+        const el = elements[i];
+        if (!el)
+          continue;
+        if (el.getBoundingClientRect().top <= threshold) {
+          current = i;
+        }
+      }
+      activeIndex = current;
     }
 
-    return () => observer.disconnect();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    updateActive();
+
+    return () => {
+      window.removeEventListener("scroll", updateActive);
+    };
   });
 </script>
 
-<nav class="indicator" aria-label="Page sections">
-  {#each sections as section, i}
-    <button
-      class="indicator__dot"
-      class:indicator__dot--active={i === activeIndex}
-      onclick={() => scrollTo(section)}
-      aria-label={labels[i]}
-    ></button>
-  {/each}
-</nav>
+{#if isHome}
+  <nav class="indicator" aria-label="Page sections">
+    {#each sections as section, i}
+      <button
+        class="indicator__dot"
+        class:indicator__dot--active={i === activeIndex}
+        onclick={() => scrollTo(section)}
+        aria-label={labels[i]}
+      ></button>
+    {/each}
+  </nav>
+{/if}
 
 <style>
   .indicator {
     position: fixed;
-    right: 0.75rem;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
     display: flex;
     flex-direction: column;
-    gap: 0.625rem;
+    gap: 2px;
     z-index: 50;
   }
 
   .indicator__dot {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--fg-subtle);
-    opacity: 0.3;
+    position: relative;
+    width: 28px;
+    height: 28px;
+    border-radius: 0;
+    background: none;
     border: none;
     padding: 0;
     cursor: pointer;
-    transition:
-      opacity var(--duration-fast) var(--ease-out),
-      transform var(--duration-fast) var(--ease-out);
   }
 
-  .indicator__dot:hover {
+  .indicator__dot::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 12px;
+    height: 1.5px;
+    border-radius: 1px;
+    background: var(--fg-subtle);
+    opacity: 0.3;
+    transform: translateY(-50%);
+    transition:
+      width var(--duration-fast) var(--ease-out),
+      opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .indicator__dot:hover::after {
     opacity: 0.7;
   }
 
-  .indicator__dot--active {
+  .indicator__dot--active::after {
+    width: 24px;
     opacity: 1;
-    transform: scale(1.5);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .indicator__dot::after {
+      transition: none;
+    }
   }
 
   @media (max-width: 768px) {

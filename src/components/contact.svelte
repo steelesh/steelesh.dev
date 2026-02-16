@@ -1,25 +1,26 @@
 <script lang="ts">
-  import SocialIcons from "$components/social-icons.svelte";
   import { roughHighlight } from "$lib/actions/rough-highlight";
-  import { scrollReveal } from "$lib/actions/scroll-reveal";
 
-  const user = "steeleshreve11";
-  const domain = "gmail.com";
+  const user = "steele";
+  const domain = "steelesh.dev";
   const email = `${user}@${domain}`;
 </script>
 
-<section class="contact" id="contact" aria-labelledby="contact-heading">
+<section class="contact inverted-theme" id="contact" aria-labelledby="contact-heading">
   <div class="contact__inner">
-    <span class="section-index" use:scrollReveal={{ y: 15 }}>[4]</span>
-    <h2 class="contact__heading" id="contact-heading" use:scrollReveal={{ y: 20 }}>
-      <em><span use:roughHighlight={{ type: "highlight", color: "rgba(16, 185, 129, 0.12)", padding: 2 }}>Contact me.</span></em>
+    <span class="section-index" data-animate style="--y: 15px">[5]</span>
+    <h2 class="contact__heading" id="contact-heading" data-animate>
+      <em><span {@attach roughHighlight({ type: "highlight", color: "rgba(16, 185, 129, 0.12)", padding: 2 })}>Get in touch.</span></em>
     </h2>
-    <p class="contact__text" use:scrollReveal={{ delay: 100, y: 15 }}>
-      My email is <a href="mailto:{email}">steeleshreve11 [at] gmail [dot] com</a>
+    <p class="contact__text" data-animate style="--start: 100ms; --y: 15px">
+      Drop me an email if you'd like.
     </p>
-    <div class="contact__socials" use:scrollReveal={{ delay: 200, y: 15 }}>
-      <SocialIcons />
-    </div>
+    <a class="contact__email" href="mailto:{email}" data-animate style="--start: 200ms; --y: 15px">
+      <svg class="contact__plane" width="18" height="18" viewBox="0 0 31.27 31.27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M27.338,3.713l-5.316,22.166l-8.651-5.492l9.699-11.854L9.456,17.781l-4.45-2.882L27.338,3.713 M30.285,0L0.984,14.678l8.174,5.128l3.749,11.464l4.789-5.779l5.616,3.586L30.285,0L30.285,0z" />
+      </svg>
+      <span>{email}</span>
+    </a>
   </div>
 </section>
 
@@ -74,27 +75,37 @@
     margin-bottom: var(--space-lg);
   }
 
-  .contact__text a {
-    color: var(--fg);
-    text-decoration: underline;
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.15em;
-    transition: color var(--duration-fast) var(--ease-out);
+  .contact__email {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--font-mono);
+    font-size: var(--fs-small);
+    color: var(--bg);
+    background: var(--fg);
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: var(--space-lg);
+    transition:
+      opacity var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
   }
 
-  .contact__text a:hover {
-    color: var(--fg-muted);
+  .contact__email:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
   }
 
-  @media (prefers-color-scheme: dark) {
-    .contact {
-      --bg: #faf8f5;
-      --bg-subtle: #f0ede8;
-      --bg-muted: #e8e4de;
-      --fg: #333334;
-      --fg-muted: #6b6560;
-      --fg-subtle: #9b9590;
-      --border-color: rgba(51, 51, 52, 0.12);
+  @media (max-width: 768px) {
+    .contact::before {
+      opacity: 0.25;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact__email {
+      transition: none;
     }
   }
 </style>

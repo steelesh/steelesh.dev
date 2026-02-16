@@ -1,0 +1,73 @@
+## The Project
+
+UCollab was a web platform that connected University of Cincinnati students in IT, CS, and related programs with project collaborators. Users posted what they were building and what skills they needed, and others could contribute or provide feedback. The platform was scoped to UC, so users collaborated with students they already shared classes and co-ops with.
+
+## Background
+
+UC's IT program requires co-op experience, but most coursework is individual. Students graduate with internship experience but limited practice working on shared codebases. There was no central place to discover what other students were building or to find collaborators.
+
+UCollab was our senior design project. A team of five built it over two semesters and presented it at UC's IT Expo in April 2025.
+
+## Features
+
+Posts were the core of the platform. Each post described a project, the technologies involved, and the type of help needed. Posts were tagged for filtering by skill and linked to a GitHub repository.
+
+Other users could leave nested comments, rate posts, and watch for updates. Notifications were configurable per type: comments, mentions, post updates, ratings, and follows.
+
+User profiles displayed a bio, avatar, known technologies, and a history of posts and contributions. Users could follow each other, and a mentorship feature supported mentor/mentee matching.
+
+## Tech Stack
+
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js 15 (app router) |
+| Language | TypeScript |
+| Database | MySQL |
+| ORM | Prisma |
+| Cache / Pub-sub | Redis |
+| Auth | NextAuth.js (Microsoft Entra ID, single-tenant) |
+| Storage | Azure Blob Storage |
+| Styling | Tailwind CSS |
+| Testing | Playwright, Vitest |
+| CI/CD | GitHub Actions |
+| Dev | Docker Compose |
+| Production | Azure |
+
+## Architecture
+
+The codebase followed a feature-based module structure. Each domain (posts, comments, notifications, users, mentorship) had its own directory with dedicated service, actions, queries, types, and schema files.
+
+- All database access was abstracted behind a service layer. No component touched the database directly.
+- A `withServiceAuth` middleware handled authentication and authorization checks before any service action executed.
+- Input validation used Zod schemas at the API boundary.
+
+### Authentication
+
+- Microsoft Entra ID via NextAuth.js, restricted to UC's tenant so only university accounts could sign in.
+- Sessions were stored in Redis rather than JWTs, allowing immediate revocation.
+- Microsoft avatar fetching on sign-in with fallback to generated defaults.
+- Multi-step onboarding flow for new users.
+
+### Data
+
+- MySQL with Prisma ORM. Full-text search indexing on post titles and descriptions.
+- Azure Blob Storage for profile photos and post banner images.
+- Proper indexing on foreign keys, cascading deletes on user and post removal.
+
+### Notifications
+
+- Redis pub/sub delivered notifications in real time without polling.
+- Granular notification preferences per type: comments, mentions, post updates, system alerts, ratings, and follows.
+- Batch notification support for events that affected multiple users.
+
+### Discovery
+
+- A trending algorithm scored posts using time decay, ratings, watcher count, and comment activity.
+- Posts supported need types (feedback, contribution, team formation, mentor matching) for filtering.
+
+### Infrastructure
+
+- Docker Compose ran MySQL and Redis locally to keep environments consistent across the team.
+- GitHub Actions handled linting, deployment, and documentation builds.
+- Rate limiting on write endpoints to prevent abuse.
+- Structured error handling with typed error classes and consistent API responses.

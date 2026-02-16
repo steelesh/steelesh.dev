@@ -5,6 +5,7 @@ node_modules
 .output
 /.svelte-kit
 /build
+/static/pagefind
 
 # OS generated files
 .DS_Store
@@ -16,5 +17,23 @@ Thumbs.db
 !.env.example
 !.env.test
 
-# Vite temporary files
+# Secrets
+.dev.vars
+!.dev.vars.example
+
+# Vite
 vite.config.*.timestamp-*
+
+# Wrangler local state
+.wrangler
+
+# Auto-generated
+api/src/services/content-registry.ts
+
+# Test output (Playwright)
+test-results
+playwright-report
+
+# Claude Code
+.claude
+CLAUDE.md

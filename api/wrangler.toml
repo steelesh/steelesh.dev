@@ -1,0 +1,18 @@
+name = "steelesh-api"
+main = "src/index.ts"
+compatibility_date = "2025-12-01"
+compatibility_flags = [ "nodejs_compat" ]
+
+[vars]
+ALLOWED_ORIGINS = "https://steelesh.dev,http://localhost:5173"
+ENVIRONMENT = "production"
+
+[[kv_namespaces]]
+binding = "RATE_LIMIT"
+id = "placeholder"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "steelesh-db"
+database_id = "placeholder"
+migrations_dir = "migrations"

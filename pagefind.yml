@@ -1,0 +1,3 @@
+site: build
+glob: "{index.html,{case-studies,projects,posts,tags,accessibility,colophon}/*.html}"
+force_language: en

@@ -1,0 +1,99 @@
+@page {
+  margin: 2cm;
+}
+
+@media print {
+  :root {
+    --bg: #fff;
+    --bg-subtle: #f5f5f5;
+    --bg-muted: #eee;
+    --fg: #111;
+    --fg-muted: #444;
+    --fg-subtle: #666;
+    --border-color: #ccc;
+    --footer-bg: #fff;
+  }
+
+  .study__bar,
+  .study__footer,
+  .toc,
+  .noise-overlay::before,
+  .back-to-top,
+  .indicator,
+  .chat-widget,
+  .chat-panel,
+  .custom-cursor,
+  .custom-cursor__ring,
+  .search-modal,
+  .ask-ai,
+  .study__tags,
+  .code-block__copy,
+  .code-block__lang,
+  .heading-anchor,
+  .skip-link,
+  .study__series,
+  footer {
+    display: none !important;
+  }
+
+  .study {
+    box-shadow: none;
+    border-radius: 0;
+    padding: 0;
+    overflow: visible;
+  }
+
+  .study__inner {
+    max-width: 100%;
+    padding-top: 0;
+  }
+
+  .study__cover {
+    height: auto;
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .code-block,
+  .study__content .code-block {
+    break-inside: avoid;
+    border: 1px solid #ccc;
+    box-shadow: none;
+    border-radius: 0.25rem;
+  }
+
+  .code-block pre.shiki {
+    --shiki-light-bg: #f8f8f8 !important;
+    --shiki-dark-bg: #f8f8f8 !important;
+    color: #111;
+    background: #f8f8f8 !important;
+  }
+
+  .code-block .shiki span {
+    color: #111 !important;
+  }
+
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+
+  .study__content a[target="_blank"]::after {
+    display: none !important;
+  }
+
+  .study__content code:not(pre code) {
+    background: #f0f0f0;
+    box-shadow: none;
+    border: 1px solid #ddd;
+  }
+
+  .study__content table {
+    box-shadow: none;
+    background: #fff;
+  }
+
+  .study__content blockquote {
+    background: #f8f8f8;
+  }
+}

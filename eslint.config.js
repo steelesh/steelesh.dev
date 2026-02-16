@@ -9,7 +9,7 @@ export default antfu({
     semi: true,
     quotes: "double",
   },
-  ignores: [".pnpm-store/*"],
+  ignores: [".pnpm-store/*", "static/pagefind/**"],
   overrides: {
     node: {
       "node/prefer-global/process": "off",
@@ -19,7 +19,7 @@ export default antfu({
 }, {
   rules: {
     "ts/no-redeclare": "off",
-    "ts/consistent-type-definitions": ["error", "type"],
+    "ts/consistent-type-definitions": ["error", "interface"],
     "no-console": ["warn"],
     "antfu/no-top-level-await": ["off"],
     "perfectionist/sort-imports": ["error", {

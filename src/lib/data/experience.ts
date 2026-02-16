@@ -2,15 +2,15 @@ import type { Experience } from "$lib/types";
 
 export const experiences: Experience[] = [
   {
-    title: "Backend Software Engineer",
+    title: "Software Engineer",
     company: "Manifest",
     companyUrl: "https://usemanifest.com/",
     location: "Chicago, IL",
     period: "Oct 2025 — Present",
     description:
-      "Shipping features and fixing bugs across the product suite to support Manifest's mission to simplify retirement account rollovers.",
+      "— Collaborate with cross-functional teams to ship features and fix bugs across the product suite, improving usability, maintainability, and supporting Manifest's mission to simplify retirement account rollovers.",
     type: "work",
-    tags: ["Spring Boot", "AWS", "TypeScript"],
+    slug: "manifest-backend",
   },
   {
     title: "Frontend Developer Intern",
@@ -19,20 +19,20 @@ export const experiences: Experience[] = [
     location: "Chicago, IL",
     period: "Jul — Sep 2025",
     description:
-      "Rebuilt a 50+ page B2C web app from Figma specs and created a shared component library used across multiple products.",
+      "— Rebuilt a 50+ page B2C web application from Figma specifications with a focus on responsive design, accessibility, and user experience.\n— Created a shared component library used across multiple Manifest products, establishing consistent design patterns and reusable UI elements.",
     type: "work",
-    tags: ["React", "TypeScript", "CSS"],
+    slug: "manifest-intern",
   },
   {
-    title: "Software Engineering Intern",
+    title: "Software Engineer Intern",
     company: "Milwaukee Tool",
     companyUrl: "https://www.milwaukeetool.com/",
     location: "Milwaukee, WI",
     period: "Jun — Aug 2024",
     description:
-      "Improved an internal product development app used by multiple engineering teams. Covered the full lifecycle from planning to product testing.",
+      "— Supported and improved an internal product development application used across multiple engineering teams.\n— Delivered features and bug fixes using a modern tech stack while maintaining code quality through testing and code reviews within an Agile workflow.",
     type: "work",
-    tags: [".NET", "TypeScript"],
+    slug: "milwaukee-tool",
   },
   {
     title: "Intern",
@@ -41,9 +41,9 @@ export const experiences: Experience[] = [
     location: "San Ramon, CA",
     period: "May — Aug 2023",
     description:
-      "Developed WordPress sites for major clients, crafted email campaigns and banner ads, and created visual assets using Adobe Creative Cloud at a premier advertising agency.",
+      "— Worked alongside the agency's strategist, web developer, and graphic designer to deliver digital assets at a premier advertising agency.\n— Developed web pages for major clients using WordPress and plugins; crafted emails and banner advertisements with frontend technologies.\n— Gained proficiency in AI-driven design tools, visual design software, and project management tooling.",
     type: "work",
-    tags: ["WordPress", "Adobe Creative Cloud"],
+    slug: "183-degrees",
   },
   {
     title: "Bachelor of Science, Information Technology",
@@ -51,7 +51,8 @@ export const experiences: Experience[] = [
     companyUrl: "https://www.uc.edu/",
     location: "Cincinnati, OH",
     period: "2020 — 2025",
-    description: "Software Application Development concentration.",
+    description: "— Software Application Development specialization.\n— Received May 2025.",
     type: "education",
+    slug: "uc-education",
   },
 ];

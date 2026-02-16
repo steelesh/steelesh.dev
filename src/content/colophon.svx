@@ -1,0 +1,39 @@
+## Authoring
+
+- [SvelteKit](https://svelte.dev)
+- [Svelte 5](https://svelte.dev)
+- [TypeScript](https://www.typescriptlang.org)
+- [mdsvex](https://mdsvex.pngwn.io)
+- [Hono](https://hono.dev)
+- [Vite](https://vite.dev)
+
+## Hosting
+
+- [Cloudflare Pages](https://pages.cloudflare.com)
+- [Cloudflare Workers](https://workers.cloudflare.com)
+- [Cloudflare D1](https://developers.cloudflare.com/d1)
+
+## Typography
+
+- [Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif)
+- [Anuphan](https://fonts.google.com/specimen/Anuphan)
+- [Berkeley Mono](https://berkeleygraphics.com/typefaces/berkeley-mono)
+
+## Software
+
+- [Visual Studio Code](https://code.visualstudio.com)
+- [Claude Code](https://claude.ai/claude-code)
+- [Bun](https://bun.sh)
+- [git](https://git-scm.com)
+- [Wrangler](https://developers.cloudflare.com/workers/wrangler)
+- [Pagefind](https://pagefind.app)
+- [Shiki](https://shiki.style)
+
+## Hardware
+
+- Apple Studio Display
+- MacBook Pro (14in, 2024, Apple M4 Pro, 24GB memory)
+- iPhone 14
+- Logitech MX Keys Mini
+- Logitech MX Master 3S
+- Fujifilm X-T50
