@@ -109,6 +109,9 @@ const config = {
     adapter: adapter({
       precompress: true,
     }),
+    prerender: {
+      handleUnseenRoutes: "warn",
+    },
     alias: {
       $components: "src/components",
       $styles: "src/styles",
