@@ -27,16 +27,22 @@ likes.post("/likes/:slug", likesRateLimit, async (c) => {
   const ip = c.req.header("cf-connecting-ip") ?? "unknown";
   const ipHash = await hashIp(ip, c.env.IP_HASH_SALT);
 
-  const results = await c.env.DB.batch([
-    c.env.DB.prepare("INSERT OR IGNORE INTO likes (slug, ip_hash) VALUES (?, ?)").bind(slug, ipHash),
-    c.env.DB.prepare(
-      "INSERT INTO like_counts (slug, count) VALUES (?, (SELECT COUNT(*) FROM likes WHERE slug = ?)) ON CONFLICT (slug) DO UPDATE SET count = (SELECT COUNT(*) FROM likes WHERE slug = ?)",
-    ).bind(slug, slug, slug),
-    c.env.DB.prepare("SELECT count FROM like_counts WHERE slug = ?").bind(slug),
-  ]);
+  const { meta } = await c.env.DB.prepare("INSERT OR IGNORE INTO likes (slug, ip_hash) VALUES (?, ?)")
+    .bind(slug, ipHash)
+    .run();
+  const isNew = meta.changes > 0;
 
-  const isNew = (results[0] as D1Result).meta.changes > 0;
-  const row = (results[2] as D1Result<{ count: number }>).results[0];
+  if (isNew) {
+    await c.env.DB.prepare(
+      "INSERT INTO like_counts (slug, count) VALUES (?, 1) ON CONFLICT (slug) DO UPDATE SET count = count + 1",
+    )
+      .bind(slug)
+      .run();
+  }
+
+  const row = await c.env.DB.prepare("SELECT count FROM like_counts WHERE slug = ?")
+    .bind(slug)
+    .first<{ count: number }>();
 
   return c.json({ count: row?.count ?? 0, liked: isNew });
 });
