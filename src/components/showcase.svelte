@@ -500,6 +500,10 @@
       max-width: none;
     }
 
+    .showcase__word {
+      color: var(--fg);
+    }
+
     .showcase__scene-right--sites :global(.pin__overlay) {
       width: min(20rem, calc(100vw - 2rem));
       height: min(16rem, calc(80vw - 2rem));

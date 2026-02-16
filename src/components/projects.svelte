@@ -648,6 +648,15 @@
       justify-content: space-between;
     }
 
+    .projects__search {
+      width: auto;
+      padding: 0.4rem;
+    }
+
+    .projects__search-text {
+      display: none;
+    }
+
     .projects__list {
       grid-template-columns: 1fr;
     }
