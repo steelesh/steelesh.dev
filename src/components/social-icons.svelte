@@ -16,7 +16,7 @@
   <a href="https://linkedin.com/in/steelesh" aria-label="LinkedIn profile" target="_blank" rel="noopener noreferrer">
     <Linkedin size={24} strokeWidth={1.5} />
   </a>
-  <a href="https://x.com/steaborr" aria-label="X profile" target="_blank" rel="noopener noreferrer">
+  <a href="https://x.com/steeleshdotdev" aria-label="X profile" target="_blank" rel="noopener noreferrer">
     {@render xIcon()}
   </a>
 </div>
