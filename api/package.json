@@ -1,0 +1,29 @@
+{
+  "name": "steelesh-api",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "generate": "bun scripts/generate-content.ts",
+    "dev": "bun run generate && wrangler dev",
+    "deploy": "bun run generate && wrangler deploy",
+    "typecheck": "bun run generate && tsc --noEmit",
+    "db:migrate": "wrangler d1 migrations apply steelesh-db --local",
+    "db:seed": "wrangler d1 execute steelesh-db --local --file=seeds/seed.sql",
+    "db:reset": "rm -rf .wrangler/state && wrangler d1 migrations apply steelesh-db --local && wrangler d1 execute steelesh-db --local --file=seeds/seed.sql",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "hono": "^4.7.0",
+    "workers-og": "^0.0.27"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.12.11",
+    "@cloudflare/workers-types": "^4.20250205.0",
+    "typescript": "^5.7.0",
+    "vitest": "^3.2.0",
+    "wrangler": "^4.0.0"
+  }
+}

@@ -1,0 +1,19 @@
+## Measures
+
+I take the following measures to ensure accessibility of this site:
+
+- Include accessibility as a core part of development.
+- Audit each page with [axe-core](https://github.com/dequelabs/axe-core) via Playwright across multiple viewports.
+- Use semantic HTML, visible focus indicators, and keyboard navigation throughout.
+- Respect `prefers-reduced-motion` in all animations and interactions.
+
+## Conformance
+
+This site targets conformance with [WCAG 2.2 Level AA](https://www.w3.org/TR/WCAG22/). It is partially conformant, meaning some parts may not fully meet the standard.
+
+- The third-party comment widget (Giscus) is excluded from audits and may have its own gaps.
+- Screen reader testing with NVDA, JAWS, or VoiceOver hasn't yet been performed.
+
+## Feedback
+
+If you encounter a barrier on this site, please [open an issue on GitHub](https://github.com/steelesh/steelesh.dev/issues).
