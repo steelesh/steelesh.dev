@@ -1,0 +1,26 @@
+This is an example draft note.
+
+Here's a simple generic function:
+
+```typescript
+function identity<T>(value: T): T {
+  return value;
+}
+
+const result = identity<string>("hello");
+```
+
+And an async data fetcher:
+
+```typescript
+interface ApiResponse<T> {
+  data: T;
+  status: number;
+}
+
+async function fetchData<T>(url: string): Promise<ApiResponse<T>> {
+  const res = await fetch(url);
+  const data: T = await res.json();
+  return { data, status: res.status };
+}
+```

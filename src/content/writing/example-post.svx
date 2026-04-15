@@ -1,0 +1,32 @@
+This is an example draft post.
+
+A type-safe event emitter pattern:
+
+```typescript
+type EventMap = {
+  connect: { host: string; port: number };
+  message: { body: string; timestamp: Date };
+  disconnect: { reason: string };
+};
+
+class TypedEmitter<T extends Record<string, unknown>> {
+  private listeners = new Map<keyof T, Set<(payload: never) => void>>();
+
+  on<K extends keyof T>(event: K, fn: (payload: T[K]) => void): void {
+    const set = this.listeners.get(event) ?? new Set();
+    set.add(fn as (payload: never) => void);
+    this.listeners.set(event, set);
+  }
+
+  emit<K extends keyof T>(event: K, payload: T[K]): void {
+    for (const fn of this.listeners.get(event) ?? []) {
+      (fn as (payload: T[K]) => void)(payload);
+    }
+  }
+}
+
+const emitter = new TypedEmitter<EventMap>();
+emitter.on("message", ({ body, timestamp }) => {
+  console.log(`[${timestamp.toISOString()}] ${body}`);
+});
+```
