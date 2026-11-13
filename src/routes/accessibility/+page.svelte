@@ -1,16 +1,15 @@
 <script lang="ts">
-  import ContentPage from "$components/content-page.svelte";
+  import ContentPage from "#components/content-page.svelte";
 
   const { data } = $props();
 </script>
 
 <ContentPage
   title="Accessibility Statement"
-  subtitle="Last updated February 2026"
+  subtitle="Accessibility on this site and how to report a problem."
   tags={[]}
   slug="accessibility"
   standalone
-  backHref="/"
   backLabel="Home"
   content={data.content}
 />

@@ -1,11 +1,14 @@
 <script lang="ts">
-  import type { ContentItem } from "$lib/types";
   import type { Component } from "svelte";
 
-  import { copyCode } from "$lib/actions/copy-code";
-  import * as config from "$lib/config";
-  import { categoryPath, getSeriesPrevNext } from "$lib/data/content";
-  import { formatDate } from "$lib/utils";
+  import { resolve } from "$app/paths";
+
+  import type { ContentItem } from "#lib/types.ts";
+
+  import { copyCode } from "#lib/actions/copy-code.ts";
+  import * as config from "#lib/config.ts";
+  import { categoryPath, getSeriesPrevNext } from "#lib/data/content.ts";
+  import { formatDate } from "#lib/utils.ts";
 
   interface Props {
     name?: string;
@@ -18,13 +21,16 @@
     updatedAt?: string;
     standalone?: boolean;
     minimal?: boolean;
-    backHref?: string;
     backLabel?: string;
     content: Component;
   }
 
-  const { name, title, subtitle, tags, slug, category = "post", publishedAt, updatedAt, standalone = false, minimal = false, backHref, backLabel, content: Content }: Props = $props();
+  const { name, title, subtitle, tags, slug, category = "post", publishedAt, updatedAt, standalone = false, minimal = false, backLabel, content: Content }: Props = $props();
   const pageTitle = $derived(name ?? title);
+
+  const canonicalUrl = $derived(`${config.url}${standalone
+    ? slug
+    : `${categoryPath(category)}/${slug}`}`);
 
   const seriesNav = $derived(getSeriesPrevNext(slug));
 
@@ -33,10 +39,14 @@
     "@type": standalone ? "WebPage" : "Article",
     "headline": pageTitle,
     "description": subtitle,
-    "url": `${config.url}${category ? `${categoryPath(category)}/${slug}` : slug}`,
+    "url": canonicalUrl,
     "image": config.ogImage,
-    ...(publishedAt ? { datePublished: publishedAt } : {}),
-    ...(updatedAt ? { dateModified: updatedAt } : {}),
+    ...(publishedAt
+      ? { datePublished: publishedAt }
+      : {}),
+    ...(updatedAt
+      ? { dateModified: updatedAt }
+      : {}),
     "author": {
       "@type": "Person",
       "name": "Steele S.",
@@ -71,10 +81,10 @@
 <svelte:head>
   <title>{pageTitle} — {config.title}</title>
   <meta name="description" content={subtitle} />
-  <meta property="og:type" content="article" />
+  <meta property="og:type" content={standalone ? "website" : "article"} />
   <meta property="og:title" content={pageTitle} />
   <meta property="og:description" content={subtitle} />
-  <meta property="og:url" content={`${config.url}${category ? `${categoryPath(category)}/${slug}` : slug}`} />
+  <meta property="og:url" content={canonicalUrl} />
   <meta property="og:image" content={config.ogImage} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
@@ -83,13 +93,13 @@
   <meta name="twitter:title" content={`${pageTitle} — ${config.title}`} />
   <meta name="twitter:description" content={subtitle} />
   <meta name="twitter:image" content={config.ogImage} />
-  <link rel="canonical" href={`${config.url}${category ? `${categoryPath(category)}/${slug}` : slug}`} />
+  <link rel="canonical" href={canonicalUrl} />
   <!-- eslint-disable-next-line svelte/no-at-html-tags -- JSON-LD structured data requires @html -->
   {@html jsonLd}
 </svelte:head>
 
 <article class="post">
-  <a class="post__back" href={backHref ?? "/"}>
+  <a class="post__back" href={resolve("/")}>
     <span aria-hidden="true">&larr;</span>
     {backLabel ?? "Back"}
   </a>
@@ -129,12 +139,12 @@
   {#if seriesNav}
     <nav class="post__series" aria-label="Series navigation">
       {#if seriesNav.prev}
-        <a class="post__series-link" href={`/${categoryPath(seriesNav.prev.category)}/${seriesNav.prev.slug}`}>
+        <a class="post__series-link" href={resolve("/w/[slug]", { slug: seriesNav.prev.slug })}>
           &larr; {seriesNav.prev.name}
         </a>
       {/if}
       {#if seriesNav.next}
-        <a class="post__series-link post__series-link--next" href={`/${categoryPath(seriesNav.next.category)}/${seriesNav.next.slug}`}>
+        <a class="post__series-link post__series-link--next" href={resolve("/w/[slug]", { slug: seriesNav.next.slug })}>
           {seriesNav.next.name} &rarr;
         </a>
       {/if}

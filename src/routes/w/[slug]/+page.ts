@@ -1,6 +1,6 @@
 import type { Component } from "svelte";
 
-import { createContentLoader } from "$lib/content-loader";
+import { createContentLoader } from "#lib/content-loader.ts";
 
 const loader = createContentLoader("post", "writing");
 const contentModules = import.meta.glob<{ default: Component }>(

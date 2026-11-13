@@ -1,6 +1,7 @@
-import { description, title, url } from "$lib/config";
-import { categoryPath, content } from "$lib/data/content";
 import { Feed } from "feed";
+
+import { description, title, url } from "#lib/config.ts";
+import { categoryPath, content } from "#lib/data/content.ts";
 
 export function buildFeed(): Feed {
   const items = [...content]
@@ -34,7 +35,11 @@ export function buildFeed(): Feed {
       link: itemUrl,
       description: item.description,
       date: new Date(item.publishedAt),
-      ...(item.updatedAt ? { updated: new Date(item.updatedAt) } : {}),
+      ...(item.updatedAt
+        ? {
+            updated: new Date(item.updatedAt),
+          }
+        : {}),
       category: item.tags.map(tag => ({ name: tag })),
     });
   }

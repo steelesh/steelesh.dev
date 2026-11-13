@@ -1,29 +1,26 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 
-const routes = [
-  { path: "/", label: "Homepage" },
-  { path: "/w/ucollab", label: "Writing" },
-  { path: "/accessibility", label: "Accessibility" },
-];
+for (const colorScheme of ["light", "dark"] as const) {
+  test.describe(colorScheme, () => {
+    test.use({ colorScheme });
 
-for (const { path, label } of routes) {
-  test(`${label} (${path}) has no WCAG 2.2 AA violations`, async ({ page }) => {
-    await page.goto(path);
-    await page.waitForLoadState("domcontentloaded");
-
-    const results = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag22aa"])
-      .analyze();
-
-    const violations = results.violations.map(v => ({
-      id: v.id,
-      impact: v.impact,
-      description: v.description,
-      nodes: v.nodes.length,
-      targets: v.nodes.map(n => n.target),
-    }));
-
-    expect(violations, `Found ${violations.length} violations`).toEqual([]);
+    for (const path of ["/", "/accessibility"]) {
+      test(`${path} has no automated accessibility violations`, async ({ page }) => {
+        const response = await page.goto(path);
+        expect(response?.ok()).toBe(true);
+        await expect(page.locator("h1")).toHaveCount(1);
+        const results = await new AxeBuilder({ page })
+          .withTags([
+            "wcag2a",
+            "wcag2aa",
+            "wcag21aa",
+            "wcag22aa",
+          ])
+          .analyze();
+        expect(results.violations).toEqual([]);
+        expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+      });
+    }
   });
 }

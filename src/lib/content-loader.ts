@@ -1,8 +1,10 @@
-import type { ContentItem } from "$lib/types";
 import type { Component } from "svelte";
 
 import { error } from "@sveltejs/kit";
-import { content, getContentBySlug } from "$lib/data/content";
+
+import type { ContentItem } from "#lib/types.ts";
+
+import { content, getContentBySlug } from "#lib/data/content.ts";
 
 export function createContentLoader(
   category: ContentItem["category"],

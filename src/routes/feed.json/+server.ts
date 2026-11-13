@@ -1,4 +1,4 @@
-import { buildFeed } from "$lib/feed";
+import { buildFeed } from "#lib/feed.ts";
 
 import type { RequestHandler } from "./$types";
 

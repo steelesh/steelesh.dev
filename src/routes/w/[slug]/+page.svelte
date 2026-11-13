@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ContentPage from "$components/content-page.svelte";
+  import ContentPage from "#components/content-page.svelte";
 
   const { data } = $props();
 </script>

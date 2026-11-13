@@ -1,13 +1,22 @@
 <script lang="ts">
+  import { resolve } from "$app/paths";
+
   const version = app_version;
 
   function toggleTheme() {
     const html = document.documentElement;
     const current = html.getAttribute("data-theme")
-      ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    const next = current === "dark" ? "light" : "dark";
+      ?? (window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light");
+    const next = current === "dark"
+      ? "light"
+      : "dark";
     html.setAttribute("data-theme", next);
-    localStorage.setItem("theme", next);
+    try {
+      localStorage.setItem("theme", next);
+    }
+    catch {}
   }
 </script>
 
@@ -15,11 +24,11 @@
   <div class="footer__inner">
     <p><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">CC BY-NC-SA 4.0</a> {new Date().getFullYear()} &copy; Steele S.</p>
     <p>
-      <a href="/accessibility">Accessibility</a>
+      <a href={resolve("/accessibility")}>Accessibility</a>
       <span class="footer__sep" aria-hidden="true">&middot;</span>
-      <a href="https://github.com/ss0923/steelesh.dev" target="_blank" rel="noopener noreferrer">Source</a>
+      <a href="https://github.com/steelesh/steelesh.dev" target="_blank" rel="noopener noreferrer">Source</a>
       <span class="footer__sep" aria-hidden="true">&middot;</span>
-      <a href="https://github.com/ss0923/steelesh.dev/releases/tag/v{version}">v{version}</a>
+      <a href="https://github.com/steelesh/steelesh.dev/releases/tag/v{version}">v{version}</a>
       <span class="footer__sep" aria-hidden="true">&middot;</span>
       <button class="theme-toggle" onclick={toggleTheme} aria-label="Toggle theme">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -73,6 +82,9 @@
     align-items: center;
     background: none;
     border: none;
+    min-width: 24px;
+    min-height: 24px;
+    justify-content: center;
     padding: 0;
     color: var(--fg-subtle);
     vertical-align: middle;

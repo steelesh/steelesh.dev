@@ -2,7 +2,7 @@ declare global {
   namespace App {}
 
   interface ImportMetaEnv {
-    readonly VITE_SEED: string;
+    readonly VITE_SHOW_DRAFTS?: string;
   }
 
   interface ImportMeta {

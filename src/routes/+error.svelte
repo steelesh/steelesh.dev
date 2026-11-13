@@ -1,8 +1,10 @@
 <script lang="ts">
+  import { resolve } from "$app/paths";
   import { page } from "$app/state";
 </script>
 
 <svelte:head>
+  <meta name="robots" content="noindex" />
   <title>{page.status} — steelesh.dev</title>
 </svelte:head>
 
@@ -10,12 +12,14 @@
   <div class="error-page__inner">
     <span class="error-page__code">{page.status}</span>
     <h1 class="error-page__title">
-      {page.status === 404 ? "Page not found" : "Something went wrong"}
+      {page.status === 404
+        ? "Page not found"
+        : "Something went wrong"}
     </h1>
     <p class="error-page__message">
       {page.error?.message || "An unexpected error occurred."}
     </p>
-    <a class="error-page__link" href="/">
+    <a class="error-page__link" href={resolve("/")}>
       <span aria-hidden="true">&larr;</span>
       Back to home
     </a>

@@ -1,6 +1,6 @@
-import type { ContentItem } from "$lib/types";
+import { dev } from "$app/env";
 
-import { dev } from "$app/environment";
+import type { ContentItem } from "#lib/types.ts";
 
 const allContent: ContentItem[] = [
   {
@@ -29,19 +29,9 @@ const allContent: ContentItem[] = [
 ];
 
 const showDrafts = dev && import.meta.env.VITE_SHOW_DRAFTS !== "false";
-export const content: ContentItem[] = showDrafts ? allContent : allContent.filter(item => !item.draft);
-
-export const tagIndex: ReadonlyMap<string, readonly ContentItem[]> = (() => {
-  const map = new Map<string, ContentItem[]>();
-  for (const item of content) {
-    for (const tag of item.tags) {
-      const existing = map.get(tag) ?? [];
-      existing.push(item);
-      map.set(tag, existing);
-    }
-  }
-  return map;
-})();
+export const content: ContentItem[] = showDrafts
+  ? allContent
+  : allContent.filter(item => !item.draft);
 
 export function getContentBySlug(
   category: ContentItem["category"],

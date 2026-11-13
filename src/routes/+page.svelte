@@ -1,8 +1,10 @@
 <script lang="ts">
   import { Rss } from "@lucide/svelte";
-  import * as config from "$lib/config";
-  import { content } from "$lib/data/content";
-  import { formatDate } from "$lib/utils";
+  import { resolve } from "$app/paths";
+
+  import * as config from "#lib/config.ts";
+  import { content } from "#lib/data/content.ts";
+  import { formatDate } from "#lib/utils.ts";
 
   const user = "steele";
   const domain = "steelesh.dev";
@@ -24,10 +26,6 @@
         "name": "Steele S.",
         "url": config.url,
         "jobTitle": "Software Developer",
-        "sameAs": [
-          "https://github.com/ss0923",
-          "https://linkedin.com/in/steelesh",
-        ],
       },
     ],
   })}<\/script>`;
@@ -54,42 +52,34 @@
 </svelte:head>
 
 <div class="page">
-  <h1 class="name">{`{ Steele }`}</h1>
+  <h1 class="name">Steele S.</h1>
   <p>
     Software developer based in Chicago, IL. Currently building fintech infrastructure at <a href="https://usemanifest.com/" target="_blank" rel="noopener noreferrer">Manifest<span class="ext" aria-hidden="true">↗</span></a>.
   </p>
 
-  {#snippet socialLinks()}
-    Also on <a href="https://github.com/ss0923" target="_blank" rel="noopener noreferrer">GitHub<span class="ext" aria-hidden="true">↗</span></a>, <a href="https://x.com/ss005217" target="_blank" rel="noopener noreferrer">X<span class="ext" aria-hidden="true">↗</span></a>, and <a href="https://linkedin.com/in/steelesh" target="_blank" rel="noopener noreferrer">LinkedIn<span class="ext" aria-hidden="true">↗</span></a>
-  {/snippet}
-
   <div class="contact">
     <p>
       <span class="prompt" aria-hidden="true">&gt;</span> Reach me at
-      <button class="email-btn" onclick={() => window.location.href = `mailto:${email}`} aria-label={`Send email to ${email}`}>
+      <a class="email-btn" href={`mailto:${email}`} aria-label={`Send email to ${email}`}>
         {email}
         <svg width="13" height="13" viewBox="0 0 31.27 31.27" fill="currentColor" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
           <path d="M27.338,3.713l-5.316,22.166l-8.651-5.492l9.699-11.854L9.456,17.781l-4.45-2.882L27.338,3.713 M30.285,0L0.984,14.678l8.174,5.128l3.749,11.464l4.789-5.779l5.616,3.586L30.285,0L30.285,0z" />
         </svg>
-      </button>
+      </a>
     </p>
-    {#if writing.length === 0}
-      <p class="social">{@render socialLinks()}</p>
-    {/if}
   </div>
 
   {#if writing.length > 0}
-    <p class="social social--right">{@render socialLinks()}</p>
     <div class="divider">
-      <a href="/feed.xml" class="rss" aria-label="RSS feed" target="_blank" rel="noopener noreferrer"><Rss size={14} strokeWidth={2} /></a>
+      <a href={resolve("/feed.xml")} class="rss" aria-label="RSS feed" target="_blank" rel="noopener noreferrer"><Rss size={14} strokeWidth={2} /></a>
       <hr />
     </div>
     <ul>
-      {#each writing as post}
+      {#each writing as post (post.slug)}
         <li>
           <div class="li-row">
-            <a href="/w/{post.slug}">{post.name}</a>
-            <time class="date">{formatDate(post.publishedAt)}</time>
+            <a href={resolve("/w/[slug]", { slug: post.slug })}>{post.name}</a>
+            <time class="date" datetime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
           </div>
           <span class="desc">{post.description}</span>
         </li>
@@ -228,23 +218,6 @@
 
   .contact p {
     margin-top: 0;
-  }
-
-  .contact p + p {
-    margin-top: 0.25rem;
-  }
-
-  .social {
-    font-size: 0.85rem;
-    color: var(--fg-muted);
-    padding-left: 1.15rem;
-  }
-
-  .social--right {
-    padding-left: 0;
-    text-align: right;
-    margin-top: 2.5rem;
-    margin-bottom: -2.25rem;
   }
 
   .prompt {

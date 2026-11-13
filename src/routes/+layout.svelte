@@ -1,15 +1,15 @@
 <script lang="ts">
-  import "$styles/reset.css";
-  import "$styles/global.css";
-  import "$styles/fonts.css";
-  import "$styles/print.css";
-  import Footer from "$components/footer.svelte";
+  import "#styles/reset.css";
+  import "#styles/global.css";
+  import "#styles/fonts.css";
+  import "#styles/print.css";
+  import Footer from "#components/footer.svelte";
 
   const { children } = $props();
 </script>
 
 <a href="#main-content" class="skip-link">Skip to content</a>
-<main id="main-content">
+<main id="main-content" tabindex="-1">
   <!-- eslint-disable-next-line no-console -- error boundary logging -->
   <svelte:boundary onerror={e => console.error("[page]", e)}>
     {@render children()}
